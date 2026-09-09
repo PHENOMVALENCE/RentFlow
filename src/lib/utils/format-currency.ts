@@ -1,10 +1,9 @@
 import { CURRENCY_CODE } from "@/lib/constants/currency";
-import { DEFAULT_LOCALE } from "@/config/site";
 
 export function formatTzs(amount: number): string {
-  const formatted = new Intl.NumberFormat(DEFAULT_LOCALE, {
-    maximumFractionDigits: 0,
-  }).format(amount);
+  const absolute = Math.abs(Math.trunc(amount));
+  const grouped = String(absolute).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const sign = amount < 0 ? "-" : "";
 
-  return `${CURRENCY_CODE} ${formatted}`;
+  return `${CURRENCY_CODE} ${sign}${grouped}`;
 }
