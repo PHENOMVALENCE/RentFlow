@@ -15,11 +15,12 @@ Agents must read in this order before implementation:
 1. `AGENTS.md`
 2. `PROJECT.md`
 3. `README.md`
-4. `CONTRIBUTING.md`
-5. `docs/PRODUCT_REQUIREMENTS.md`
-6. `docs/ARCHITECTURE.md`
-7. `docs/DATABASE_SCHEMA.md`
-8. relevant feature documentation
+4. `docs/PROGRESS.md`
+5. `CONTRIBUTING.md`
+6. `docs/PRODUCT_REQUIREMENTS.md`
+7. `docs/ARCHITECTURE.md`
+8. `docs/DATABASE_SCHEMA.md`
+9. relevant feature documentation
 
 ## Branching Rules
 

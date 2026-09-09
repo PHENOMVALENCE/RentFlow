@@ -134,6 +134,7 @@ Production target is Vercel, with GitHub as source control. Deployment is not co
 - [`docs/SECURITY.md`](docs/SECURITY.md)
 - [`docs/HACKATHON.md`](docs/HACKATHON.md)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)
+- [`docs/PROGRESS.md`](docs/PROGRESS.md)
 - [`docs/DECISIONS.md`](docs/DECISIONS.md)
 
 ## Contribution information
@@ -146,11 +147,11 @@ RentFlow will handle sensitive tenancy and payment metadata. Do not commit secre
 
 ## Roadmap summary
 
-Phase 0 is repository foundation. Next is authentication and UI foundation, then property/unit/tenancy, agreements, billing, payments, SMS, maintenance, passport, and demo hardening. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
+Phase 0 is complete on `masterchanges`. Next is authentication and UI foundation, then property/unit/tenancy, agreements, billing, payments, SMS, maintenance, passport, and demo hardening. See [`docs/ROADMAP.md`](docs/ROADMAP.md) and [`docs/PROGRESS.md`](docs/PROGRESS.md).
 
 ## Project status
 
-**Phase 0 — repository bootstrap.** The application shell and documentation exist. Authentication and domain workflows are not implemented.
+**Phase 0 — repository bootstrap: complete** (PR open, not merged). The application shell and documentation exist. Authentication and domain workflows are not implemented. Track status in [`docs/PROGRESS.md`](docs/PROGRESS.md).
 
 ## License
 

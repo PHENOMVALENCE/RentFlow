@@ -10,6 +10,7 @@ All notable changes to RentFlow are recorded here.
 - Project structure for domain types, payments, notifications, and validation
 - Project governance and product documentation
 - Public landing page and planned auth/dashboard shells (`/`, `/login`, `/register`, `/landlord`, `/tenant`)
+- Progress log (`docs/PROGRESS.md`) recording Phase 0 completion and the next phase
 
 ## 0.1.0 — Repository baseline
 

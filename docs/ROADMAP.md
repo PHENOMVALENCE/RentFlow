@@ -1,6 +1,10 @@
 # Roadmap — RentFlow
 
+Status snapshot (9 September 2026): **Phase 0 complete** on `masterchanges` (PR [#1](https://github.com/PHENOMVALENCE/RentFlow/pull/1), not merged). **Phase 1** is next. See [`PROGRESS.md`](./PROGRESS.md).
+
 ## PHASE 0 — Repository bootstrap
+
+**Status:** Complete on `masterchanges`; waiting for review/merge into `main`.
 
 **Objective:** Establish the Git workflow, Next.js app, documentation, and public shell.
 
@@ -11,6 +15,8 @@
 **Acceptance:** lint, typecheck, and production build pass; PR opened to `main` and not auto-merged.
 
 ## PHASE 1 — UI foundation and authentication
+
+**Status:** Not started.
 
 **Objective:** Sign-up / sign-in for landlord and tenant.
 
