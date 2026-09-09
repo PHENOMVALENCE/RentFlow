@@ -26,7 +26,8 @@ Digital Agreement → Automated Rent Obligation → Mobile-Money Payment → Ver
 
 | Capability | Status |
 | --- | --- |
-| Public application shell and project documentation | Implemented |
+| Public landing page (`/`) | Implemented |
+| Planned login, register, landlord, and tenant shells | Implemented (placeholders) |
 | Next.js / TypeScript / Tailwind foundation | Implemented |
 | Authentication (Supabase Auth) | Planned |
 | Properties, units, tenancies | Planned |
