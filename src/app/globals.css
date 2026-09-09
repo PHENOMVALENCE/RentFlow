@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f1ea;
+  --foreground: #12201c;
+  --muted: #5b6a65;
+  --primary: #0c4f42;
+  --primary-foreground: #f6faf8;
+  --primary-soft: #e4f0ec;
+  --surface: #fffcf7;
+  --border: #d8d0c4;
+  --accent: #9a4a1f;
+  --success: #1f7a4d;
+  --warning: #9a6700;
+  --ring: color-mix(in srgb, var(--primary) 28%, transparent);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-source-serif);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-serif {
+  font-family: var(--font-source-serif), ui-serif, Georgia, serif;
+}
+
+input:disabled,
+button:disabled {
+  cursor: not-allowed;
+}
+
+input:not(:disabled):focus-visible,
+button:not(:disabled):focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
