@@ -1,30 +1,60 @@
 # RentFlow Security Policy
 
-RentFlow handles tenancy agreements, payment metadata, phone numbers, and other personally identifiable information. Treat confidentiality and integrity as product requirements, not later hardening work.
+RentFlow will handle tenancy agreements, payment metadata, phone numbers and other sensitive rental information. Confidentiality, integrity and authorization are product requirements, not later hardening work.
 
-## Reporting a vulnerability
+## Reporting a Vulnerability
 
-Email the repository owner at the Git identity associated with [PHENOMVALENCE/RentFlow](https://github.com/PHENOMVALENCE/RentFlow). Do not open a public GitHub issue for security-sensitive reports.
+Do not open a public GitHub issue for security-sensitive reports. Contact the repository owner through an appropriate private channel.
 
-Include:
+Include where possible:
 
-- a description of the issue
-- affected surfaces (route, API, webhook, storage path)
-- reproduction notes that do not include live secrets
-- impact assessment if known
+- a description of the issue;
+- affected surface (route, webhook, storage path, job, command, etc.);
+- reproduction notes that do not contain live secrets;
+- impact assessment if known.
+
+## Current Repository State
+
+The active `masterchanges` branch is currently documentation-only. The previous Next.js implementation has been removed and the Laravel application has not yet been initialized.
+
+Do not treat RentFlow as production-ready until the documented Laravel security controls are actually implemented and tested.
 
 ## Secrets
 
-- Never commit API keys, service-role keys, webhook secrets, or `.env.local`.
-- Use `.env.example` as the public template.
-- Only `NEXT_PUBLIC_*` values may be exposed to the browser, and only when they are intentionally public.
+When Laravel implementation begins:
 
-## Current bootstrap status
+- never commit `.env`;
+- never commit API keys, payment credentials, SMS credentials, database passwords, webhook secrets or private keys;
+- keep `.env.example` limited to safe variable names/placeholders;
+- expose only values explicitly intended for browser use;
+- consume secrets through Laravel configuration rather than scattering direct `env()` access through application code.
 
-Authentication, Row Level Security, payment webhooks, and SMS providers are **planned**. Until they are implemented, do not treat the application as production-ready for real tenant or payment data.
+## Laravel Security Baseline
 
-## Related documentation
+The implementation is expected to use:
 
-- `docs/SECURITY.md` — detailed security design
+- Laravel session authentication;
+- secure password hashing;
+- CSRF protection;
+- Policies/Gates/middleware;
+- Form Request/server-side validation;
+- controlled Eloquent mass assignment;
+- private file storage;
+- payment webhook verification and idempotency;
+- rate limiting for sensitive endpoints;
+- database transactions for atomic financial workflows;
+- audit trails for material financial/tenancy actions.
+
+## Real Data
+
+Do not use real tenant, landlord, payment or research-participant data until authorization, storage, privacy, backup and security controls have been implemented and reviewed.
+
+Use synthetic data for development, automated tests and demonstrations where possible.
+
+## Related Documentation
+
+- `docs/SECURITY.md` — detailed Laravel security design
 - `docs/API_INTEGRATIONS.md` — provider boundaries
-- `AGENTS.md` — agent security rules
+- `docs/TESTING.md` — security/authorization/payment tests
+- `docs/DEPLOYMENT.md` — production environment controls
+- `AGENTS.md` — implementation-agent security rules
