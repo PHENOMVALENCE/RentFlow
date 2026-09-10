@@ -1,127 +1,269 @@
-# Roadmap — RentFlow
+# Roadmap — RentFlow 2027 Final Year Project
 
-Status snapshot (9 September 2026): **Phase 0 complete** on `masterchanges` (PR [#1](https://github.com/PHENOMVALENCE/RentFlow/pull/1), not merged). **Phase 1** is next. See [`PROGRESS.md`](./PROGRESS.md).
+This roadmap prioritizes a complete, testable rental lifecycle before advanced commercial features. `main` remains the base/release branch; implementation proceeds through `masterchanges` with small iterative commits and pull requests.
 
-## PHASE 0 — Repository bootstrap
+## Phase 0 — Repository and Product Foundation
 
-**Status:** Complete on `masterchanges`; waiting for review/merge into `main`.
+**Status:** Complete.
 
-**Objective:** Establish the Git workflow, Next.js app, documentation, and public shell.
+Deliverables:
 
-**Deliverables:** `main` baseline, `masterchanges`, Next.js + TypeScript + Tailwind + ESLint, docs, `.env.example`, landing shell.
+- Next.js + TypeScript + Tailwind foundation;
+- Git workflow and agent instructions;
+- public/auth UI shell;
+- initial domain/payment/SMS abstractions;
+- environment template;
+- baseline product and architecture documentation.
 
-**Dependencies:** GitHub repository.
+Historical bootstrap was merged through PR #1.
 
-**Acceptance:** lint, typecheck, and production build pass; PR opened to `main` and not auto-merged.
+## Phase 1 — FYP Requirements and Architecture Baseline
 
-## PHASE 1 — UI foundation and authentication
+**Status:** Documentation baseline established; implementation validation remains ongoing.
 
-**Status:** Not started.
+Deliverables:
 
-**Objective:** Sign-up / sign-in for landlord and tenant.
+- FYP proposal;
+- formal SRS;
+- research/evaluation plan;
+- testing strategy;
+- deployment strategy;
+- updated project/product scope;
+- architecture/database/integration review against the SRS.
 
-**Deliverables:** Auth routes, profile row, role-aware redirects, protected layouts.
+Acceptance:
 
-**Dependencies:** Supabase project.
+- all P0 product requirements can be traced to system modules and planned tests;
+- no hackathon-only assumptions remain in the active project scope.
 
-**Acceptance:** Both roles can register, log in, and reach an empty dashboard.
+## Phase 2 — Authentication and Role Isolation
 
-## PHASE 2 — Property + unit management
+Objective: establish secure identity and authorization.
 
-**Objective:** Landlord can model buildings and units with TZS rent.
+Deliverables:
 
-**Deliverables:** CRUD for properties and units; occupancy flags.
+- Supabase project/environment;
+- landlord and tenant sign-up/sign-in;
+- profiles and role model;
+- protected dashboards;
+- server-side authorization;
+- RLS policies for core data;
+- automated negative authorization tests.
 
-**Dependencies:** Phase 1.
+Acceptance:
 
-**Acceptance:** Landlord creates a property and a unit with monthly rent.
+- authenticated roles reach correct dashboards;
+- Tenant A cannot access Tenant B data;
+- Landlord A cannot access Landlord B data.
 
-## PHASE 3 — Tenant onboarding + tenancy management
+## Phase 3 — Property, Unit and Tenancy Lifecycle
 
-**Objective:** Invite tenant and bind a tenancy to a unit.
+Objective: model the core rental relationship.
 
-**Deliverables:** Invitation, tenancy record, tenant view of assigned unit.
+Deliverables:
 
-**Dependencies:** Phase 2.
+- property CRUD;
+- unit CRUD;
+- occupancy/vacancy state;
+- tenant invite/link flow;
+- tenancy creation and activation;
+- rent amount, billing frequency and due rules;
+- lease start/end dates and expiry indicators.
 
-**Acceptance:** Tenant accepts invite and sees the unit.
+Acceptance:
 
-## PHASE 4 — Digital agreements
+- landlord can create a property/unit and activate a valid tenancy;
+- tenant can see only their linked tenancy.
 
-**Objective:** Structured agreement draft, send, view, accept.
+## Phase 4 — Digital Agreements and Audit Trail
 
-**Deliverables:** Agreement statuses, acceptance audit row.
+Objective: create traceable structured agreements.
 
-**Dependencies:** Phase 3.
+Deliverables:
 
-**Acceptance:** Tenant acceptance is stored with version and timestamp.
+- agreement generation from tenancy data;
+- agreement versions;
+- send/view/accept lifecycle;
+- acceptance timestamps and audit metadata;
+- tenancy activity timeline.
 
-## PHASE 5 — Rent billing
+Optional robustness:
 
-**Objective:** Generate invoices independent of payments.
+- OTP acceptance;
+- PDF generation/verification ID.
 
-**Deliverables:** Invoice statuses, due dates, balances.
+Acceptance:
 
-**Dependencies:** Phase 4.
+- accepted agreement can be traced to an exact version and user.
 
-**Acceptance:** After acceptance, a rent obligation is visible to both parties.
+## Phase 5 — Rent Engine and Invoicing
 
-## PHASE 6 — Payments
+Objective: implement reliable rental obligations independent of payments.
 
-**Objective:** Record rent payment through the provider abstraction.
+Deliverables:
 
-**Deliverables:** Sandbox adapter, payment statuses, landlord live view, receipts.
+- recurring rent schedule;
+- invoice generation;
+- due dates/periods;
+- DRAFT, UPCOMING, DUE, PARTIALLY_PAID, PAID, OVERDUE, WAIVED and CANCELLED logic where applicable;
+- balance calculations;
+- landlord and tenant invoice views.
 
-**Dependencies:** Phase 5.
+Acceptance:
 
-**Acceptance:** Simulated payment marks invoice paid and issues a receipt.
+- invoices are generated correctly from tenancy rules;
+- calculations are covered by unit tests.
 
-## PHASE 7 — SMS reminders
+## Phase 6 — Payments, Partial Allocations and Receipts
 
-**Objective:** Notify parties of invitations, due rent, and payments.
+Objective: build a robust mobile-money-ready financial workflow.
 
-**Deliverables:** SMS adapter (Africa's Talking or sandbox logger).
+Deliverables:
 
-**Dependencies:** Phase 6.
+- payment-provider abstraction;
+- sandbox adapter first;
+- payment initiation;
+- payment status lifecycle;
+- idempotent webhook processing;
+- amount/currency/reference verification;
+- partial-payment allocation;
+- digital receipts;
+- manual-payment distinction if supported.
 
-**Acceptance:** A payment or reminder event produces a sent or logged SMS.
+Acceptance:
 
-## PHASE 8 — Maintenance
+- full payment settles invoice once;
+- partial payment produces correct remaining balance;
+- duplicate webhook cannot duplicate payment/allocation/receipt;
+- failed payment cannot settle invoice.
 
-**Objective:** Tenant reports issues; landlord updates status.
+## Phase 7 — SMS and Notification Automation
 
-**Deliverables:** Categories, priorities, status history, optional attachments.
+Objective: reduce manual landlord/tenant communication.
 
-**Dependencies:** Phase 3.
+Deliverables:
 
-**Acceptance:** Tenant sees landlord status changes.
+- notification service/adapter;
+- Africa's Talking sandbox or equivalent;
+- rent due reminders;
+- overdue reminders;
+- payment confirmations;
+- agreement notifications;
+- lease-expiry notifications;
+- maintenance updates;
+- delivery logging/retry strategy.
 
-## PHASE 9 — Rental Passport + timeline
+Acceptance:
 
-**Objective:** Tenancy timeline and consent-controlled passport summary.
+- provider failure does not corrupt originating transactions;
+- representative SMS workflows are testable.
 
-**Deliverables:** Event log UI; passport stats; no public exposure.
+## Phase 8 — Maintenance Management
 
-**Dependencies:** Phases 4–8.
+Objective: create a transparent maintenance workflow.
 
-**Acceptance:** Demo can show timeline and passport without calling it a credit score.
+Deliverables:
 
-## PHASE 10 — Analytics + polish
+- tenant issue reporting;
+- categories, priority and attachments;
+- REPORTED → ACKNOWLEDGED → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED workflow;
+- REOPENED where required;
+- status history;
+- notifications.
 
-**Objective:** Collection summaries and UX hardening.
+Acceptance:
 
-**Deliverables:** Simple landlord totals; accessibility and low-bandwidth passes.
+- both parties see the same chronological ticket state.
 
-**Dependencies:** Phase 6.
+## Phase 9 — Landlord Analytics and Portfolio Reporting
 
-**Acceptance:** Landlord can see paid vs overdue in TZS.
+Objective: turn transactional records into useful management information.
 
-## PHASE 11 — Hackathon demo hardening
+Deliverables:
 
-**Objective:** Reliable 15-step demo.
+- expected rent;
+- collected rent;
+- overdue amount;
+- collection rate;
+- occupancy/vacancy;
+- upcoming lease expiries;
+- maintenance workload/resolution indicators;
+- property-level summaries.
 
-**Deliverables:** Seed demo accounts (non-secret), script, failure fallbacks.
+Acceptance:
 
-**Dependencies:** Phases 1–9 as available.
+- dashboard values are derived from authoritative invoices/payments rather than duplicated manual totals.
 
-**Acceptance:** Full vertical can be demonstrated without crashes.
+## Phase 10 — Inspections and Security-Deposit Accounting
+
+Objective: improve move-in/move-out traceability.
+
+Deliverables:
+
+- move-in inspection;
+- move-out inspection;
+- checklist/condition/notes/images;
+- optional meter readings;
+- comparison view;
+- deposit accounting ledger;
+- deduction evidence and refundable balance.
+
+Acceptance:
+
+- closing record is auditable;
+- platform does not claim to custody deposit funds.
+
+## Phase 11 — Property Manager, Localization and Accessibility
+
+Objective: improve market readiness and inclusion.
+
+Deliverables:
+
+- delegated property-manager permissions;
+- English/Kiswahili localization;
+- SMS language preference;
+- accessibility review;
+- mobile/low-bandwidth optimization.
+
+Acceptance:
+
+- delegated users cannot access unrelated properties;
+- primary tenant/landlord journeys work at common mobile widths.
+
+## Phase 12 — FYP Evaluation and Hardening
+
+Objective: validate the system academically and technically.
+
+Deliverables:
+
+- complete automated quality gate;
+- end-to-end FYP demo path;
+- performance measurements;
+- authorization/security test results;
+- usability study;
+- problem/solution evaluation;
+- dissertation evidence and diagrams;
+- deployment/demo environment;
+- known limitations register.
+
+Acceptance:
+
+- FYP requirements are traceable to implementation/tests;
+- critical demo flow works without dead ends;
+- evaluation results are based on measured/collected evidence rather than invented claims.
+
+## Post-FYP Product Expansion
+
+Potential future work:
+
+- production mobile-money rails at scale;
+- USSD balance/payment/maintenance workflows;
+- WhatsApp notifications;
+- maintenance vendor management;
+- service-charge/utility billing;
+- portfolio forecasting and operational anomaly detection;
+- tenant-controlled portable rental history;
+- commercial subscription/billing model;
+- native/mobile app only if responsive web/PWA constraints justify it.
+
+Commercial expansion must preserve tenant privacy and avoid automated housing-access decisions based on opaque scoring.
