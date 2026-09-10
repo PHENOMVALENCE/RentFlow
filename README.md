@@ -2,115 +2,124 @@
 
 **One agreement. One payment trail. One source of truth.**
 
-RentFlow is a 2027 Final Year Project and market-oriented digital rental management platform for Tanzanian landlords, tenants and property managers.
+RentFlow is a 2027 Final Year Project and market-oriented rental management platform for Tanzanian landlords, tenants and property managers.
 
 Repository: https://github.com/PHENOMVALENCE/RentFlow
+
+## Current Repository State
+
+The application codebase has intentionally been reset. The repository currently serves as a **documentation-first project baseline** from which the Laravel implementation will be built cleanly.
+
+There is no production-ready application in this branch yet. Do not describe planned functionality as implemented.
 
 ## Overview
 
 RentFlow digitizes the rental lifecycle after a landlord and tenant enter a rental relationship. Instead of managing agreements, rent, receipts, maintenance and tenancy history across paper, WhatsApp, notebooks, spreadsheets and mobile-money screenshots, RentFlow provides one auditable workflow:
 
-**Property → Unit → Tenant → Tenancy → Agreement → Rent Invoice → Payment → Receipt → Maintenance → Inspection → Renewal / Exit**
+**Property → Unit → Tenant → Tenancy → Agreement → Rent Invoice → Payment → Reconciliation → Receipt → SMS → Maintenance → Inspection → Renewal / Exit**
 
-RentFlow is not primarily a property-listing marketplace. Its focus is rental operations, rent assurance, communication and traceability.
+RentFlow is not primarily a property-listing marketplace. Its focus is rental operations, rent assurance, communication, payment traceability and accountability.
 
 ## Problem
 
 Rental management can become fragmented and difficult to verify. Landlords need reliable visibility into expected rent, collected rent, partial payments, arrears, occupancy, lease expiries and maintenance. Tenants need access to agreements, balances, payment proof, receipts and maintenance history.
 
-RentFlow addresses these problems using structured tenancy records, a rent engine, provider-agnostic mobile-money integration, SMS notifications, digital receipts, maintenance workflows, inspections, deposit accounting and dashboards.
+RentFlow addresses these problems through structured tenancy records, automated rent billing, mobile-money integrations, SMS notifications, digital receipts, maintenance workflows, inspections, deposit accounting and dashboards.
 
-## Core Capabilities
+## Planned Core Capabilities
 
-| Capability | Direction |
-| --- | --- |
-| Public landing/auth UI | Existing foundation |
-| Role-based authentication | Planned implementation |
-| Properties and units | Planned implementation |
-| Tenant/tenancy lifecycle | Planned implementation |
-| Digital agreements | Planned implementation |
-| Rent invoices independent of payments | Planned implementation |
-| Partial payment allocation | Planned implementation |
-| Provider-agnostic mobile-money payments | Planned implementation |
-| Verified reconciliation/webhooks | Planned implementation |
-| Digital receipts | Planned implementation |
-| SMS via adapter (Africa's Talking target) | Planned implementation |
-| Maintenance workflow | Planned implementation |
-| Move-in/move-out inspections | Planned implementation |
-| Security-deposit accounting ledger | Planned implementation |
-| Property-manager role | Planned implementation |
-| Landlord analytics/reporting | Planned implementation |
-| Tenancy audit timeline | Planned implementation |
-| English/Kiswahili localization | Planned implementation |
-| Optional USSD self-service | Future extension |
-
-Do not represent planned or sandbox capabilities as production-live features.
+- role-based authentication and authorization;
+- landlord, tenant, property-manager and administrator roles;
+- property and unit management;
+- tenant onboarding and tenancy lifecycle management;
+- digital rental agreements and acceptance audit trail;
+- recurring rent schedules and invoice generation;
+- partial and full payment allocation;
+- mobile-money payment integrations behind provider adapters;
+- idempotent payment webhook reconciliation;
+- digital receipts;
+- SMS reminders and notifications;
+- maintenance ticketing and status history;
+- move-in and move-out inspections;
+- security-deposit accounting ledger;
+- landlord financial and occupancy analytics;
+- tenancy audit timeline;
+- English and Kiswahili localization;
+- optional USSD and external API support in later phases.
 
 ## Final Year Project Positioning
 
-The FYP studies whether a unified rental platform can improve transaction visibility, operational efficiency and accountability between landlords and tenants.
+The FYP studies whether a unified rental platform can improve rent-management efficiency, transaction visibility and accountability between landlords and tenants.
 
 Academic baseline: [`docs/FYP_PROPOSAL.md`](docs/FYP_PROPOSAL.md)
 
-Research/evaluation plan: [`docs/RESEARCH_AND_EVALUATION.md`](docs/RESEARCH_AND_EVALUATION.md)
-
 Software requirements: [`docs/SRS.md`](docs/SRS.md)
 
-## User Roles
+Research and evaluation plan: [`docs/RESEARCH_AND_EVALUATION.md`](docs/RESEARCH_AND_EVALUATION.md)
 
-- **Landlord** — properties, units, tenancies, agreements, rent, collections, maintenance, inspections and reports.
-- **Tenant** — agreement, invoices, payments, receipts, maintenance, inspections and tenancy history.
-- **Property Manager** — manages explicitly assigned properties under delegated permissions.
-- **Administrator** — platform operations/support with auditable privileges.
+## Canonical Technology Stack
 
-## Technology Stack
+RentFlow will be implemented as a **Laravel monolith**.
 
-Current direction:
+- **Backend / Web Framework:** Laravel
+- **Language:** PHP
+- **Frontend:** Blade + Livewire + Tailwind CSS
+- **Database:** MySQL 8+
+- **ORM:** Eloquent
+- **Authentication:** Laravel authentication stack; Fortify/Breeze-compatible approach where appropriate
+- **Authorization:** Laravel Policies, Gates and middleware
+- **Validation:** Laravel Form Requests / validation rules
+- **Background Work:** Laravel Queues and Jobs
+- **Scheduling:** Laravel Scheduler
+- **Notifications:** Laravel Notifications with SMS adapter integration
+- **Payments:** provider-agnostic Laravel service layer
+- **SMS target:** Africa's Talking through an adapter/service
+- **File Storage:** Laravel Filesystem with private local/S3-compatible storage depending on environment
+- **Testing:** PHPUnit or Pest, selected during implementation
+- **Source Control:** GitHub
+- **Deployment:** standard PHP/Laravel hosting or VPS/container deployment depending on final environment
 
-- Next.js App Router
-- React
-- TypeScript
-- Tailwind CSS
-- PostgreSQL
-- Supabase for PostgreSQL/Auth/Storage unless architecture changes
-- Zod for validation where appropriate
-- provider adapters for payments and SMS
-- Vercel deployment
-- GitHub source control and CI/CD
+The architecture intentionally avoids a separate JavaScript SPA backend unless a future requirement proves it necessary.
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-
-## Repository Structure
+## Planned Repository Structure
 
 ```text
-src/app          App Router routes
-src/components   Reusable UI and feature components
-src/config       Application/public configuration
-src/lib          Domain services, adapters, validation and helpers
-src/types        Shared domain types
-docs/            Product, FYP and engineering documentation
-supabase/        Database migrations/configuration
+app/
+  Http/
+  Models/
+  Policies/
+  Services/
+  Jobs/
+  Notifications/
+  Actions/
+  Domain/
+bootstrap/
+config/
+database/
+  factories/
+  migrations/
+  seeders/
+resources/
+  views/
+  css/
+  js/
+routes/
+  web.php
+  api.php
+tests/
+docs/
 ```
 
-## Local Development
-
-```bash
-git checkout masterchanges
-npm install
-cp .env.example .env.local
-npm run dev
-```
-
-Then open `http://localhost:3000`.
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Development Workflow
 
 - `main` is the base/release branch.
-- Implementation work belongs on `masterchanges` (or an explicitly approved branch derived from it).
+- Application implementation belongs on `masterchanges` or an explicitly approved branch derived from it.
 - Make small iterative conventional commits.
-- Keep the configured repository owner's Git authorship.
+- Preserve the repository owner's configured Git authorship.
 - Do not add AI co-author attribution unless explicitly requested.
-- Validate lint/typecheck/tests/build before delivery.
+- Validate formatting, tests and production build/assets before delivery.
 - Open a PR back to `main`.
 - Coding agents must not self-merge.
 
@@ -118,42 +127,52 @@ Full rules: [`AGENTS.md`](AGENTS.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), and 
 
 ## Financial Workflow Principles
 
-RentFlow models invoices separately from payments. A rent invoice can be due, partially paid, fully paid or overdue. Payments are allocated against invoices, allowing accurate balances and partial payments.
+RentFlow models **rent invoices separately from payments**. A single invoice may receive multiple partial payments, and a single payment may later support explicit allocation logic where needed.
 
-Provider callbacks must be processed server-side and idempotently. A client-side success message or payment screenshot is not sufficient evidence to settle an invoice.
+Payment provider callbacks must be validated server-side and processed idempotently. A frontend success message, SMS screenshot or manually uploaded proof is not sufficient by itself to settle an invoice automatically.
 
-## Security
+Laravel database transactions should be used around financial state transitions where atomicity matters.
 
-RentFlow is expected to handle sensitive tenancy and payment metadata. Critical rules include server-side authorization, least privilege, private document access, webhook validation, secrets outside source control, and RLS before real Supabase pilot/production use.
+## Security Principles
+
+Critical controls include:
+
+- server-side authorization using policies and middleware;
+- least-privilege role access;
+- CSRF protection for browser workflows;
+- input validation through Form Requests;
+- private tenancy/document storage;
+- encrypted secrets outside source control;
+- verified payment callbacks;
+- rate limiting for sensitive routes;
+- audit logs for financial and tenancy events;
+- safe file-upload validation;
+- no destructive rewriting of financial history.
 
 See [`SECURITY.md`](SECURITY.md) and [`docs/SECURITY.md`](docs/SECURITY.md).
 
 ## Testing
 
-Testing must cover domain calculations, tenancy workflows, authorization boundaries, payments, duplicate webhook delivery, SMS failures, mobile UX and end-to-end landlord/tenant journeys.
+Testing must cover rent calculations, allocations, tenancy workflows, authorization boundaries, duplicate webhooks, payment failures, SMS failures, maintenance workflows, mobile UX and end-to-end landlord/tenant journeys.
 
 See [`docs/TESTING.md`](docs/TESTING.md).
-
-## Deployment
-
-Deployment/environment policy is documented in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Production-like environments must be separated from test/sandbox data and credentials.
 
 ## Documentation Index
 
 - [`PROJECT.md`](PROJECT.md) — canonical product specification
-- [`AGENTS.md`](AGENTS.md) — mandatory coding-agent rules
+- [`AGENTS.md`](AGENTS.md) — mandatory implementation-agent rules
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — contribution workflow
 - [`SECURITY.md`](SECURITY.md) — vulnerability reporting
 - [`docs/FYP_PROPOSAL.md`](docs/FYP_PROPOSAL.md) — Final Year Project proposal baseline
 - [`docs/RESEARCH_AND_EVALUATION.md`](docs/RESEARCH_AND_EVALUATION.md) — research/evaluation methodology
 - [`docs/SRS.md`](docs/SRS.md) — software requirements specification
 - [`docs/PRODUCT_REQUIREMENTS.md`](docs/PRODUCT_REQUIREMENTS.md) — product requirements
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — system architecture
-- [`docs/DATABASE_SCHEMA.md`](docs/DATABASE_SCHEMA.md) — data model/schema direction
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Laravel system architecture
+- [`docs/DATABASE_SCHEMA.md`](docs/DATABASE_SCHEMA.md) — relational data model
 - [`docs/API_INTEGRATIONS.md`](docs/API_INTEGRATIONS.md) — external integration strategy
 - [`docs/TESTING.md`](docs/TESTING.md) — testing and quality strategy
-- [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) — environments and release strategy
-- [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) — development notes
+- [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) — Laravel environments and release strategy
+- [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) — Laravel development setup
 - [`docs/GIT_WORKFLOW.md`](docs/GIT_WORKFLOW.md) — Git workflow
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — phased implementation roadmap
 - [`docs/PROGRESS.md`](docs/PROGRESS.md) — current implementation state
@@ -163,7 +182,9 @@ Deployment/environment policy is documented in [`docs/DEPLOYMENT.md`](docs/DEPLO
 
 ## Current Status
 
-The original repository bootstrap and public UI foundation were merged through PR #1. The next workstream is to mature RentFlow from that prototype foundation into the 2027 Final Year Project implementation. Track the exact status in [`docs/PROGRESS.md`](docs/PROGRESS.md).
+**Documentation baseline established. Application code reset. Laravel implementation not started.**
+
+The next engineering step is to initialize a clean Laravel application on `masterchanges`, establish the database/authentication foundation, and implement RentFlow vertically according to `docs/ROADMAP.md`.
 
 ## License
 
