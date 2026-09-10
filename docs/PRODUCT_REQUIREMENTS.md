@@ -61,7 +61,7 @@ Needs auditable support/operations capabilities and integration-failure visibili
 
 - secure registration/sign-in;
 - landlord and tenant roles;
-- server-side authorization;
+- server-side authorization using Laravel Policies/Gates/middleware;
 - protected dashboards;
 - tenant/landlord data isolation.
 
@@ -99,18 +99,20 @@ PDF rendering and OTP acceptance can be P1 if the structured workflow is already
 - generate invoices/obligations independently of payments;
 - calculate amount due and balance;
 - support DRAFT, UPCOMING, DUE, PARTIALLY_PAID, PAID, OVERDUE, WAIVED and CANCELLED where applicable;
-- support recurring monthly rental schedules;
-- retain invoice history.
+- support recurring monthly rental schedules through Laravel Scheduler/domain services;
+- retain invoice history;
+- prevent duplicate invoices for the same tenancy/billing period.
 
 ### Payments — P0 sandbox / P1 production-capable rail
 
 - initiate payment against an invoice;
-- provider-agnostic adapter;
+- provider-agnostic Laravel service/adapter;
 - record provider/internal references;
 - process success/failure/cancelled states;
 - idempotent webhook processing;
 - server-side verification;
 - partial-payment allocation;
+- database transactions around atomic reconciliation;
 - distinguish manual vs provider-verified payments.
 
 ### Receipts — P0
@@ -132,7 +134,7 @@ Events:
 - maintenance update;
 - lease expiry.
 
-Provider target: Africa's Talking through an adapter boundary.
+Provider target: Africa's Talking through a Laravel service/notification adapter. Slow delivery work should use Laravel queues where appropriate.
 
 ### Maintenance — P0
 
@@ -183,7 +185,7 @@ Provider target: Africa's Talking through an adapter boundary.
 
 ### Localization — P1
 
-- English and Kiswahili translation keys;
+- English and Kiswahili Laravel translation resources;
 - locale-appropriate currency/date/number formatting;
 - SMS copy respects preferred language when configured.
 
@@ -195,6 +197,8 @@ Potential low-bandwidth self-service:
 - initiate payment flow;
 - view due date;
 - submit simple maintenance request/status inquiry.
+
+USSD should call the same Laravel domain services as the web application rather than duplicate financial logic.
 
 ### Rental History / Portable Passport — P2
 
@@ -210,7 +214,9 @@ A future tenant-controlled history may summarize verified tenancies and payments
 - customer-fund escrow/custody;
 - integration with every payment operator at once;
 - multi-country support;
-- native iOS/Android apps before the responsive web/PWA experience is validated.
+- native iOS/Android apps before the responsive Laravel web experience is validated;
+- microservice decomposition without a demonstrated need;
+- a separate JavaScript SPA/API architecture for the initial FYP.
 
 ## Non-Functional Requirements
 
@@ -218,16 +224,22 @@ Detailed requirements and identifiers are in `docs/SRS.md`.
 
 Key expectations:
 
-- secure server-side authorization;
-- RLS before real Supabase pilot/production use;
+- secure Laravel session authentication;
+- server-side authorization with Policies/Gates/middleware;
+- CSRF protection for browser forms;
+- validated Form Requests and safe model assignment;
 - idempotent financial integrations;
+- MySQL transaction integrity for atomic financial workflows;
 - structured logs without secrets;
-- responsive mobile-first UI;
+- responsive mobile-first Blade/Livewire UI;
 - accessibility-minded controls and status communication;
 - efficient low-bandwidth behaviour;
-- maintainable TypeScript/domain separation;
+- maintainable PHP/domain separation;
 - testable business logic;
-- documented migrations and environment configuration.
+- Laravel migrations for schema changes;
+- queues/jobs for slow/retryable provider work;
+- scheduler-based recurring billing/reminder tasks;
+- documented environment configuration.
 
 ## Primary FYP Acceptance Flow
 
