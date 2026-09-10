@@ -1,56 +1,147 @@
 # Progress — RentFlow
 
-Last updated: 9 September 2026
+Last updated: 10 September 2026
 
-## Current phase
+## Current Phase
 
-**Phase 0 — Repository bootstrap: complete (awaiting merge).**
+**Phase 1 — Documentation baseline and Laravel architecture reset.**
 
-Development continues on `masterchanges`. Pull request into `main`:
+The previous application codebase has intentionally been removed from `masterchanges`. RentFlow is now a documentation-first repository ready for a clean Laravel implementation.
 
-https://github.com/PHENOMVALENCE/RentFlow/pull/1
+## Historical Context
 
-The PR has not been merged. `main` still holds only the empty-repository baseline.
+- PR #1 merged the original Next.js prototype/bootstrap into `main` on 9 September 2026.
+- That prototype is preserved in Git history.
+- On 10 September 2026, the project direction changed to Laravel for the 2027 Final Year Project.
+- The implementation code on `masterchanges` was removed so the Laravel application can be initialized cleanly rather than mixing frameworks.
 
-## Completed
+## Current Repository State
 
-- Git baseline on `main`, then all implementation on `masterchanges`
-- Next.js 16.3.4 App Router app in the repository root (npm package name `rentflow`)
-- TypeScript, Tailwind CSS 4, ESLint, `typecheck` script
-- Public landing page and placeholder routes: `/`, `/login`, `/register`, `/landlord`, `/tenant`
-- Domain types, payment/SMS adapter interfaces, TZS and date helpers, Tanzanian phone validation
-- `.env.example` and `supabase/` placeholders (no live credentials)
-- Product, architecture, security, hackathon, and workflow documentation
+Retained:
 
-## Validation (Phase 0)
+- `README.md`
+- `PROJECT.md`
+- `AGENTS.md`
+- `CONTRIBUTING.md`
+- `SECURITY.md`
+- `CHANGELOG.md`
+- `docs/` project/FYP/engineering documentation
+- repository/Git history
 
-| Command | Result |
-| --- | --- |
-| `npm run lint` | Pass |
-| `npm run typecheck` | Pass |
-| `npm run build` | Pass |
+Removed from the active implementation branch:
 
-## In progress
+- previous `src/` application code;
+- Next.js configuration;
+- TypeScript configuration;
+- npm application package manifests/lockfile;
+- previous Supabase scaffolding;
+- previous application environment template.
 
-Nothing is currently in implementation on this branch beyond documenting Phase 0 completion.
+No Laravel application has been initialized yet.
 
-## Not started (next)
+## Canonical Implementation Direction
 
-**Phase 1 — UI foundation and authentication**
+The planned FYP implementation is now:
 
-Requires a Supabase project. Intended work:
+- Laravel
+- PHP
+- Blade + Livewire
+- Tailwind CSS
+- MySQL 8+
+- Eloquent ORM
+- Laravel authentication/session stack
+- Policies/Gates/middleware
+- Form Requests/validation
+- Laravel Queues/Jobs
+- Laravel Scheduler
+- Laravel Notifications
+- Laravel Filesystem
+- PHPUnit or Pest
+- payment/SMS providers behind internal Laravel service interfaces
 
-- Landlord and tenant registration / sign-in
-- `profiles` row and role
-- Protected `/landlord` and `/tenant` layouts
-- Replace disabled placeholder forms with real auth (still no payment providers)
+See `docs/DECISIONS.md` and `docs/ARCHITECTURE.md`.
 
-## Blockers
+## Documentation Baseline
 
-- No Supabase URL or keys in the environment (by design for bootstrap)
-- No Africa's Talking or payment-provider credentials
-- Licensing still undecided
+Current documentation includes:
 
-## Notes for the next agent
+- `docs/FYP_PROPOSAL.md` — academic problem, aim, objectives, questions and scope;
+- `docs/SRS.md` — formal functional/non-functional requirements;
+- `docs/PRODUCT_REQUIREMENTS.md` — prioritized product scope;
+- `docs/ARCHITECTURE.md` — Laravel architecture;
+- `docs/DATABASE_SCHEMA.md` — MySQL/Eloquent schema blueprint;
+- `docs/API_INTEGRATIONS.md` — payment/SMS/provider boundaries;
+- `docs/TESTING.md` — Laravel testing and quality strategy;
+- `docs/DEPLOYMENT.md` — Laravel deployment/environment strategy;
+- `docs/RESEARCH_AND_EVALUATION.md` — FYP research/evaluation plan;
+- `docs/ROADMAP.md` — phased Laravel implementation plan;
+- `docs/DECISIONS.md` — architecture decision log including superseded Next.js decisions.
 
-Read `AGENTS.md`, then `PROJECT.md`, then this file. Stay on `masterchanges`. Do not merge PRs. Do not claim placeholder auth is live.
+## Next Engineering Phase
+
+**Phase 2 — Clean Laravel Bootstrap**
+
+The next implementation should:
+
+1. initialize Laravel in the repository root without removing documentation;
+2. establish PHP/Composer dependencies;
+3. configure Blade + Livewire + Tailwind;
+4. configure MySQL and `.env.example`;
+5. configure the base authentication stack;
+6. establish Laravel tests;
+7. establish formatting/static-analysis conventions;
+8. add GitHub CI checks;
+9. verify a clean install/build/test flow;
+10. commit the bootstrap in small logical commits.
+
+Do not begin broad feature implementation until the bootstrap is reproducible.
+
+## Following Product Vertical
+
+After bootstrap:
+
+1. authentication and role isolation;
+2. property/unit management;
+3. tenant onboarding and tenancy lifecycle;
+4. digital agreements and audit timeline;
+5. rent engine/invoicing;
+6. payments, partial allocations and receipts;
+7. SMS reminders/notifications;
+8. maintenance;
+9. analytics;
+10. inspections/deposit accounting;
+11. property-manager/localization/accessibility hardening;
+12. FYP evaluation and final deployment.
+
+See `docs/ROADMAP.md` for acceptance criteria.
+
+## Dependencies / Future Credentials
+
+Implementation will eventually require environment-specific configuration for:
+
+- MySQL;
+- SMS sandbox/production provider;
+- payment sandbox/production provider;
+- storage where production requires external object storage;
+- mail/observability services where selected.
+
+No credentials belong in Git.
+
+## Quality Status
+
+There is currently **no active application code to build or test** after the reset.
+
+The next meaningful quality gate starts after Laravel initialization. Expected baseline commands will include:
+
+```bash
+php artisan test
+npm run build
+```
+
+Additional formatter/static-analysis commands will be documented only after they are actually configured.
+
+## Notes for the Next Agent
+
+Read `AGENTS.md`, `PROJECT.md`, this file, `docs/SRS.md`, `docs/ARCHITECTURE.md` and `docs/ROADMAP.md` before implementation.
+
+Stay off `main` for implementation. Preserve the repository owner's Git authorship. Make small iterative commits. Open a PR to `main` for completed delivery units. Do not self-merge.

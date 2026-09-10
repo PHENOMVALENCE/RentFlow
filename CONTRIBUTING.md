@@ -2,109 +2,115 @@
 
 Thank you for helping build RentFlow. This document covers both human contributors and coding agents working in this repository.
 
-## Prerequisites
+## Current State
 
-- Node.js 20+ (LTS recommended)
-- npm
+The repository is currently documentation-first. The previous application codebase has been removed so the Laravel implementation can begin from a clean baseline.
+
+## Planned Prerequisites
+
+Once the Laravel application is initialized, contributors should expect:
+
+- PHP compatible with the selected Laravel release
+- Composer
+- Node.js/npm for frontend asset compilation
+- MySQL 8+
 - Git
-- A GitHub account with access to [PHENOMVALENCE/RentFlow](https://github.com/PHENOMVALENCE/RentFlow)
+- a GitHub account with access to `PHENOMVALENCE/RentFlow`
 
-## Local setup
+## Planned Local Setup
+
+After the Laravel bootstrap is committed, the standard flow should resemble:
 
 ```bash
 git clone https://github.com/PHENOMVALENCE/RentFlow.git
 cd RentFlow
 git checkout masterchanges
+composer install
 npm install
-cp .env.example .env.local
-npm run dev
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm run build
+php artisan serve
 ```
 
-The app is served at [http://localhost:3000](http://localhost:3000).
+Exact setup commands must be kept current once implementation begins.
 
-## Environment configuration
+## Environment Configuration
 
-Copy `.env.example` to `.env.local`. Leave unused provider keys empty until those integrations are implemented. Never commit `.env.local` or other files containing secrets.
+Never commit `.env` or credentials. `.env.example` should contain variable names and safe placeholders only.
 
-## Branch policy
+Laravel configuration should consume environment variables through files in `config/`. Avoid scattered direct `env()` access throughout domain/application code.
 
-- `main` is the production/base branch.
-- All implementation work happens on `masterchanges`.
+## Branch Policy
+
+- `main` is the base/release branch.
+- All implementation work happens on `masterchanges` or an explicitly approved branch derived from it.
 - Never implement features directly on `main`.
-- Open pull requests from `masterchanges` (or a short-lived branch based on it) into `main`.
-- Do not merge your own pull request unless the repository owner has explicitly asked you to.
+- Open pull requests back to `main`.
+- Coding agents do not merge their own pull requests.
 
-## `masterchanges` workflow
+## Commit Conventions
 
-1. `git checkout masterchanges`
-2. `git pull` if the branch already tracks origin
-3. Implement one coherent change
-4. Lint / typecheck (and tests when available)
-5. Commit with a conventional message
-6. Push `masterchanges`
-7. Open or update a pull request targeting `main`
-
-## Commit conventions
-
-Use conventional commits:
+Use small conventional commits:
 
 - `feat:` new product capability
 - `fix:` bug fix
 - `docs:` documentation
-- `chore:` tooling, bootstrap, or maintenance
-- `refactor:` internal change with no intended behavior change
+- `chore:` tooling/bootstrap/maintenance
+- `refactor:` internal change without intended behaviour change
 - `test:` tests
 - `perf:`, `build:`, `ci:` as needed
 
-Commits should be small, reviewable, and keep the application buildable whenever practical.
+Commits should remain focused and reviewable.
 
-## Code standards
+## Laravel Code Standards
 
-- TypeScript strict mode; avoid `any`
-- Server-side validation for untrusted input
-- No secrets in client bundles
-- Accessible, mobile-first UI
-- TZS formatting and Tanzanian date display for financial values
-- Keep business rules out of giant page components
+- follow Laravel conventions unless a documented requirement justifies deviation;
+- keep controllers thin;
+- use Form Requests/validators for input validation;
+- use Policies/Gates/middleware for authorization;
+- use Eloquent relationships intentionally and prevent N+1 queries;
+- use Services/Actions for reusable business workflows;
+- use Jobs/Queues for slow or retryable work;
+- use migrations for every schema change;
+- use factories/seeders with synthetic data;
+- use database transactions for atomic financial state changes;
+- keep secrets in server-side configuration;
+- keep business rules out of Blade/Livewire presentation code.
 
 ## Testing
 
-Run:
+Primary application test command:
 
 ```bash
-npm run lint
-npm run typecheck
-npm run build
+php artisan test
 ```
 
-Add `npm test` when a test runner is introduced. New domain logic should ship with tests.
+Formatting/static-analysis commands will be documented once selected. Asset compilation should also be validated when frontend changes occur.
 
-## Documentation updates
+New financial and authorization logic must ship with tests.
 
-Update docs when architecture, schema, environment variables, APIs, setup, workflows, or product behavior change. Start with `PROJECT.md`, `README.md`, and the relevant file in `docs/`.
+## Documentation Updates
 
-## Pull request expectations
+Update docs whenever architecture, schema, environment variables, APIs, setup, workflows, security assumptions or product behaviour changes.
+
+## Pull Request Expectations
 
 PRs should describe:
 
-- what changed and why
-- validation performed
-- documentation updates
-- known limitations
-- screenshots for UI work
+- what changed and why;
+- requirements addressed;
+- migrations introduced;
+- tests/validation performed;
+- documentation updates;
+- known limitations;
+- screenshots for material UI changes.
 
-## Review requirements
+## Security Reporting
 
-The repository owner reviews and merges into `main`. Do not auto-merge.
+See `SECURITY.md`. Do not file public issues for sensitive vulnerabilities.
 
-## Security reporting
+## Authorship Policy
 
-See [SECURITY.md](./SECURITY.md). Do not file public issues for sensitive vulnerabilities.
-
-## Authorship policy
-
-Commits must use the repository owner's configured Git identity when they are intentionally being made on behalf of the owner.
-
-Contributions generated with development tools or coding agents must still use that configured identity in those cases.
-
-No automated agent attribution should be inserted into commits unless the repository owner explicitly requests it. Do not add `Co-authored-by` lines for Cursor, Claude, Codex, ChatGPT, or other agents.
+Commits intentionally made on behalf of the repository owner must preserve the configured owner identity. Automated development tools must not add themselves as authors or co-authors unless explicitly requested by the repository owner.

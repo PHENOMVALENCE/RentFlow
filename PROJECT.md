@@ -2,199 +2,446 @@
 
 ## 1. Executive Summary
 
-RentFlow is a digital rental relationship and financial management platform designed for Tanzanian residential tenancies. It replaces fragmented paper agreements, WhatsApp chats, notebooks, spreadsheets, and mobile-money screenshots with one shared workflow: property → unit → tenant → tenancy → agreement → rent invoice → payment → receipt → maintenance → rental history → renewal or exit.
+RentFlow is a 2027 Final Year Project and market-oriented digital rental management platform designed for Tanzanian residential tenancies. It replaces fragmented paper agreements, WhatsApp chats, notebooks, spreadsheets, mobile-money screenshots and informal maintenance follow-up with one auditable workflow:
 
-RentFlow is being developed for the RIDC PT Innovation Hackathon 2026 and is positioned as Software / Web & Mobile with strong Financial Inclusion and Fintech characteristics.
+**property → unit → tenant → tenancy → agreement → rent invoice → payment → reconciliation → receipt → SMS → maintenance → inspection → renewal or exit**
+
+The project is intentionally broader than a basic rent-tracking CRUD system. It combines tenancy lifecycle management, financial workflows, mobile-money integration, SMS communication, maintenance operations, inspections, deposit accounting, analytics and auditability.
+
+The implementation stack is a Laravel monolith using PHP, Blade, Livewire, Tailwind CSS, MySQL, Eloquent, Laravel queues/jobs, scheduler, notifications, policies and migrations.
 
 ## 2. Vision
 
-Become trusted digital infrastructure for rental relationships in Tanzania: one agreement, one payment trail, one source of truth.
+Become trusted digital infrastructure for rental relationships in Tanzania: **one agreement, one payment trail, one source of truth.**
 
 ## 3. Mission
 
-Give landlords and tenants a shared, auditable record of occupancy, rent obligations, mobile-money payments, receipts, maintenance, and tenancy history — accessible on inexpensive Android phones and usable in low-bandwidth environments.
+Give landlords, tenants and property managers a shared and auditable system for occupancy, rent obligations, mobile-money payments, receipts, maintenance, agreements, inspections and tenancy history while remaining practical on mobile devices and constrained networks.
 
 ## 4. Problem Statement
 
-Rental relationships are managed across disconnected systems: paper or verbal agreements, WhatsApp, handwritten notebooks, spreadsheets, mobile-money SMS, payment screenshots, phone calls, and informal maintenance requests.
+Rental relationships are commonly managed across disconnected channels: paper or verbal agreements, WhatsApp, handwritten notebooks, spreadsheets, mobile-money SMS, payment screenshots, phone calls and informal maintenance requests.
 
-Landlords struggle to know who has paid, calculate outstanding rent, track overdue invoices, keep property records, issue consistent receipts, remind tenants, and retain history.
+Landlords can struggle to know who has paid, calculate outstanding rent, track partial payments, issue receipts, monitor lease expiry, manage several properties, retain documents and follow maintenance work.
 
-Tenants struggle to access agreements, prove payment, understand balances, get receipts, track maintenance, and demonstrate rental reliability to future landlords.
+Tenants can struggle to retrieve agreements, prove payment, understand balances, obtain receipts, follow maintenance progress and preserve a reliable history of their tenancy.
 
-## 5. Market Context
+RentFlow addresses this fragmentation by turning the tenancy lifecycle into a structured, digital and auditable workflow.
 
-Tanzania’s urban rental market is largely informal or semi-formal. Mobile money (M-Pesa, Mixx by Yas, Airtel Money, HaloPesa) is the dominant payment rail. SMS remains a reliable notification channel. Many users access the internet on low-cost Android devices. English is a practical initial UI language; Swahili is required for later inclusion.
+## 5. Product Positioning
 
-RentFlow is not a US-centric property-management SaaS clone. Billing is in TZS. Identity and contact patterns assume Tanzanian phone numbers. Payments are designed around mobile money first, banks second.
+RentFlow is primarily a **rental operations and rent-assurance platform**, not a property-listing marketplace.
+
+The initial market context is Tanzania:
+
+- TZS as the default currency;
+- Tanzanian phone-number formats;
+- mobile-money-first payment design;
+- SMS as an important operational channel;
+- mobile-first and low-bandwidth-aware UX;
+- English and Kiswahili localization architecture.
 
 ## 6. Target Users
 
-- Landlords with one or many residential properties
-- Tenants renting houses, apartments, rooms, or units
-- Future: property managers (not in hackathon MVP)
+### Landlords
+Individuals or businesses managing one or more residential rental properties.
 
-## 7. User Personas
+### Tenants
+People renting houses, apartments, rooms or residential units.
 
-**Amina, landlord (Dar es Salaam)**  
-Owns three apartment units. Collects rent via Mixx and M-Pesa. Currently tracks payments in a notebook and WhatsApp screenshots. Needs occupancy, due dates, and payment confirmation without chasing tenants.
+### Property Managers
+Users managing assigned properties on behalf of landlords with delegated permissions.
 
-**Joseph, tenant**  
-Rents a room monthly. Pays by mobile money. Needs proof of payment, a copy of the agreement, and a way to report plumbing issues without losing the conversation in chat.
+### Administrators
+Platform operators supporting configuration, troubleshooting and audit processes through explicit, auditable privileges.
 
-**Future — Neema, property manager**  
-Would manage multiple landlords. Out of MVP scope; architecture should not block a later role.
-
-## 8. Core Value Proposition
+## 7. Core Value Proposition
 
 Instead of:
 
-- Agreement → paper
-- Payment → mobile-money screenshot
-- Receipt → WhatsApp
-- Reminder → phone call
-- Maintenance → chat
-- Records → notebook
+- agreement → paper;
+- payment → screenshot;
+- receipt → manual message;
+- reminder → phone call;
+- maintenance → chat;
+- inspection → memory/photos in a phone;
+- records → notebook/spreadsheet;
 
 RentFlow provides:
 
-Digital agreement → automated rent obligation → mobile-money payment → verified digital receipt → maintenance tracking → rental history → renewal/exit records.
+**Digital agreement → automated rent obligation → mobile-money payment → verified reconciliation → digital receipt → SMS notification → maintenance tracking → inspection/deposit record → tenancy history → renewal/exit.**
 
-## 9. Product Principles
+## 8. Product Principles
 
-1. Shared source of truth for both parties
-2. Mobile-first, low-bandwidth
-3. Provider-agnostic payments
-4. Consent-controlled rental history
-5. Auditability over informal chat
-6. Honest claims — no fake legal or credit-score status
-7. Least privilege and tenant privacy
-8. Complete vertical workflows over incomplete feature sprawl
+1. Shared source of truth for authorized participants.
+2. Financial records are explicit and auditable.
+3. Invoices and payments are separate domain concepts.
+4. Partial payments are supported through allocations.
+5. External-provider callbacks are untrusted until verified.
+6. Mobile-first and low-bandwidth aware.
+7. Provider-agnostic payments and notifications.
+8. Least privilege and tenant privacy.
+9. Complete vertical workflows over feature sprawl.
+10. Honest product claims: no fake legal certification, credit scoring or automatic blacklisting.
+11. Prefer Laravel conventions and a single maintainable application over unnecessary distributed architecture.
 
-## 10. User Roles
+## 9. Core Modules
 
-**Landlord** — owns properties and units, invites tenants, creates agreements, tracks invoices and payments, handles maintenance.
+1. Authentication and Identity
+2. Role-Based Access Control
+3. Landlord Profiles
+4. Tenant Profiles
+5. Property Management
+6. Unit Management
+7. Property-Manager Assignment
+8. Tenancy Lifecycle Management
+9. Digital Rental Agreements
+10. Rent Billing / Invoice Engine
+11. Payment Initiation
+12. Payment Reconciliation
+13. Partial Payment Allocation
+14. Digital Receipts
+15. SMS and In-App Notifications
+16. Maintenance Management
+17. Move-In and Move-Out Inspections
+18. Security-Deposit Ledger
+19. Document Vault
+20. Audit Trail / Tenancy Timeline
+21. Landlord Analytics and Reporting
+22. Tenant Self-Service Dashboard
+23. Localization (English/Kiswahili)
+24. Optional USSD Workflows
 
-**Tenant** — accepts invitations and agreements, views obligations, pays rent, receives receipts, submits maintenance, controls Rental Passport sharing.
+Detailed functional requirements are defined in `docs/SRS.md`.
 
-**Property manager** — future role; do not prioritize for the hackathon MVP.
+## 10. Canonical Technology Stack
 
-## 11. Core Product Modules
+RentFlow will be implemented as a **Laravel monolith**.
 
-1. Authentication & Identity  
-2. Landlord Management  
-3. Tenant Management  
-4. Property Management  
-5. Unit Management  
-6. Tenancy Management  
-7. Digital Agreements  
-8. Rent Billing / Invoicing  
-9. Payments  
-10. Digital Receipts  
-11. Notifications & Reminders  
-12. Maintenance Management  
-13. Rental History  
-14. Rental Passport  
-15. Analytics / Reporting  
-16. Audit Trail  
+### Application
 
-## 12. MVP Scope
+- Laravel
+- PHP
+- Blade
+- Livewire
+- Tailwind CSS
 
-The hackathon MVP is one end-to-end vertical:
+### Data
 
-1. Landlord creates account  
-2. Creates property  
-3. Creates unit  
-4. Adds/invites tenant  
-5. Creates tenancy  
-6. Creates digital rental agreement  
-7. Tenant reviews agreement  
-8. Tenant accepts agreement  
-9. RentFlow generates a rent obligation/invoice  
-10. Tenant sees amount due and due date  
-11. Tenant initiates or simulates payment  
-12. Payment is recorded  
-13. Landlord sees payment immediately  
-14. Tenant receives a digital receipt  
-15. Payment/reminder notification is sent  
-16. Tenant creates a maintenance request  
-17. Landlord receives it  
-18. Landlord updates status  
-19. Tenant sees progress  
-20. Timeline records major events  
+- MySQL 8+
+- Eloquent ORM
+- Laravel migrations
+- factories and seeders using synthetic data
 
-## 13. Out-of-Scope Features
+### Application Services
 
-Not in hackathon MVP unless leftover capacity remains:
+- Laravel Policies/Gates/middleware for authorization
+- Laravel Form Requests / validation rules
+- Laravel Queues and Jobs
+- Laravel Scheduler
+- Laravel Notifications
+- Laravel Filesystem
+- provider-specific payment/SMS implementations behind internal services/interfaces
 
-- Property-manager consoles
-- Marketplace listings
-- Automatic tenant blacklists or credit scores
-- Full legally certified e-signature under Tanzanian law
-- Live production connections to every mobile-money operator
-- Native mobile apps (responsive web first)
-- Complex accounting, tax filing, or payroll
-- AI as a primary product
-- Multi-country expansion
+### Testing
 
-## 14. Core Workflows
+- PHPUnit or Pest through Laravel's testing stack
+- Laravel feature tests for HTTP/domain integration
+- provider fakes/sandbox adapters for payments and SMS
 
-**Onboarding:** landlord account → property → unit → tenant invite → tenancy.
+### Deployment
 
-**Agreement:** structured draft from tenancy data → sent → viewed → accepted with version, user, and timestamp.
+- standard Laravel-compatible hosting, VPS or container environment
+- MySQL
+- queue worker
+- cron-triggered Laravel Scheduler
+- HTTPS
+- private file storage
+- GitHub source control/CI
 
-**Billing:** invoices independent of payments; statuses include DRAFT, UPCOMING, DUE, PARTIALLY_PAID, PAID, OVERDUE, WAIVED, CANCELLED.
+The FYP does **not** require a separate Next.js/React frontend, Supabase backend, or microservice fleet.
 
-**Payment:** provider-agnostic initiation; sandbox simulator for demo; later M-Pesa, Mixx, Airtel Money, HaloPesa, bank, manual.
+## 11. Rent Engine
 
-**Maintenance:** tenant reports → landlord workflow (REPORTED through CLOSED/REOPENED) with history.
+Rent billing is a core domain capability.
 
-**Exit/renewal:** agreement expiry monitoring; archive or renew; history retained.
+A tenancy defines rules such as:
 
-## 15. Rental Passport
+- rent amount;
+- billing frequency;
+- due-day/date;
+- tenancy start/end dates;
+- optional grace rules;
+- deposit/accounting information.
 
-Tenants may eventually obtain a portable, consent-controlled Rental Passport showing verified tenancies, on-time vs late payments, and completed/active agreements.
+The system generates invoice/obligation records independently from payments.
 
-This is **not** a credit score. The platform must not auto-blacklist tenants or publish history. Sharing is tenant-controlled and subject to legal, privacy, and consent requirements.
+Supported invoice states should include, where applicable:
 
-## 16. Trust & Audit Trail
+- DRAFT
+- UPCOMING
+- DUE
+- PARTIALLY_PAID
+- PAID
+- OVERDUE
+- WAIVED
+- CANCELLED
 
-Each tenancy should have an immutable-style chronological timeline (agreement created/accepted, payments, maintenance, renewals). Agreement acceptance stores version, accepting user, timestamp, and audit metadata. Status changes on invoices, payments, and maintenance must be historically traceable.
+Balances are derived from invoice totals minus valid payment allocations, not from a single `paid=true` flag.
 
-## 17. Mobile-Money Strategy
+Laravel Scheduler should orchestrate recurring billing jobs. Domain billing services must prevent duplicate invoices for the same tenancy and period.
 
-Do not hard-code the domain around one operator. Implement a payment-provider abstraction with a sandbox simulator first. Store internal payment IDs, invoice IDs, amount, TZS, payer, provider, provider references, timestamps, status, and raw metadata where safe. Credentials never reach the browser.
+## 12. Payment Architecture
 
-## 18. Notification Strategy
+Payment implementation must be provider-agnostic.
 
-Plan Africa's Talking for SMS. Cover invitations, agreement events, rent reminders, payment receipts, maintenance updates, and expiry notices. Use adapter boundaries. In-app notifications may complement SMS.
+The initial FYP may use a sandbox adapter, followed by a production-capable mobile-money provider when credentials are available.
 
-## 19. Low-Bandwidth Strategy
+Store at minimum:
 
-Prefer server rendering, compressed assets, responsive images, minimal client JavaScript, lazy loading, pagination, efficient queries, and no unnecessary polling. Optimistic UI only where safe.
+- internal payment ID;
+- tenancy reference;
+- amount and currency;
+- payer identity/phone as appropriate;
+- provider;
+- provider reference;
+- payment status;
+- initiation/completion timestamps;
+- safe provider metadata;
+- explicit payment allocations.
 
-## 20. Localization Strategy
+Critical requirements:
 
-Architect copy so Swahili can be introduced without rewriting business logic. English is the initial UI language. Dates and numbers should be understandable in Tanzanian locales (`en-TZ`, later `sw-TZ`).
+- idempotent webhook processing;
+- server-side verification;
+- duplicate-event protection;
+- amount/currency/reference validation;
+- explicit handling of failed/cancelled payments;
+- manual payments clearly distinguishable from provider-verified payments;
+- database transactions around atomic reconciliation/allocation/state changes.
 
-## 21. Privacy Principles
+Payment-provider code should live behind Laravel service/interface boundaries rather than controllers or Livewire components.
 
-Least privilege, tenant data privacy, landlord isolation, explicit consent for history sharing, no public rental-history exposure, secure file storage, and data-retention discipline.
+## 13. Notification Strategy
 
-## 22. Security Principles
+SMS is a first-class operational channel. Africa's Talking is the initial target provider, accessed through a Laravel adapter/service.
 
-Server-side authorization, RLS before production, validated webhooks, input and upload validation, secrets in environment variables only, HTTPS in production, rate limiting and abuse controls as the product is exposed.
+Notification events include:
 
-## 23. Success Metrics
+- tenant invitations;
+- agreement ready/accepted events;
+- rent due reminders;
+- overdue rent reminders;
+- payment success/failure;
+- receipt availability;
+- maintenance updates;
+- lease-expiry alerts.
 
-Hackathon: complete demo path without dead ends.
+Slow/retryable SMS work should normally use Laravel queues.
 
-Product (later): time-to-first-agreement, invoice-to-payment conversion, on-time payment rate, receipt issuance rate, maintenance resolution time, tenant passport consent rate, SMS delivery success.
+Notification delivery failure must not corrupt the business transaction that caused the notification.
 
-## 24. Hackathon Demonstration Flow
+## 14. Maintenance Workflow
 
-See `docs/HACKATHON.md`. The live demo should walk from landlord sign-in through payment, receipt, SMS (or sandbox equivalent), maintenance, timeline, and a Rental Passport summary.
+A maintenance ticket should support:
 
-## 25. Future Product Direction
+- category;
+- description;
+- priority;
+- attachments/images;
+- reporting tenant;
+- responsible landlord/property manager;
+- optional assigned service provider;
+- timestamps and notes;
+- status history.
 
-After MVP: production mobile-money rails, SMS at scale, Swahili, PDF agreements with verification IDs, property-manager role, advisory maintenance intelligence, analytics, and carefully designed sharing of verified rental history with housing providers or financial institutions under consent.
+Suggested states:
+
+**REPORTED → ACKNOWLEDGED → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED**, with REOPENED when required.
+
+Laravel authorization must ensure only tenancy participants or properly delegated managers can access the ticket.
+
+## 15. Inspections and Security Deposits
+
+Move-in and move-out inspections should record condition, notes, meter readings where relevant and photographic evidence.
+
+The deposit component is initially an **accounting ledger**, not a custody/escrow product. It should show:
+
+- deposit required;
+- amount recorded as received;
+- documented deductions;
+- reason/evidence for deductions;
+- refundable balance;
+- settlement status.
+
+RentFlow must not claim to hold customer deposits unless a compliant financial custody mechanism is later implemented.
+
+## 16. Agreement Strategy
+
+Agreements may be created from structured tenancy data and versioned.
+
+Acceptance should record:
+
+- agreement version;
+- accepting user;
+- acceptance timestamp;
+- relevant audit metadata;
+- optional OTP or verification event when implemented.
+
+Agreement documents are private tenancy records and should be served through authorization-controlled Laravel routes/storage mechanisms.
+
+The product must not state that ordinary in-app acceptance is automatically a legally certified electronic signature. Legal claims must match the implemented mechanism and applicable law.
+
+## 17. Analytics and Reporting
+
+Landlord/property-manager analytics should include, where implemented:
+
+- total properties and units;
+- occupancy/vacancy;
+- expected rent;
+- rent collected;
+- outstanding/overdue rent;
+- collection rate;
+- partial-payment count;
+- upcoming lease expiries;
+- maintenance workload and resolution metrics;
+- property-by-property financial summaries.
+
+All figures must be derived from authoritative invoice/payment/allocation records.
+
+Use efficient Eloquent queries, eager loading, aggregation and pagination. Avoid manually duplicated dashboard totals.
+
+## 18. Audit Trail
+
+Critical tenancy events should form a chronological timeline covering agreements, invoices, payments, receipts, maintenance, inspections, renewals and closure.
+
+Financial/audit records should avoid destructive rewriting. Changes should remain traceable.
+
+## 19. Localization and Accessibility
+
+- English and Kiswahili should use Laravel localization resources rather than business-logic duplication.
+- Dates, currency and numbers should be appropriate for Tanzania.
+- Core flows must remain usable on small mobile screens.
+- Blade/Livewire forms and controls should use semantic, accessible patterns.
+- Low-bandwidth usage should avoid unnecessary polling and oversized assets.
+
+## 20. Authentication and Authorization
+
+The browser application should use Laravel session authentication.
+
+Authorization is enforced server-side through Policies, Gates, middleware and scoped Eloquent relationships/queries.
+
+Important boundaries:
+
+- tenant accesses only their tenancy records;
+- landlord accesses only owned properties and related records;
+- property manager accesses only assigned properties;
+- administrator actions remain explicit/auditable;
+- client-controlled IDs/role fields cannot elevate privileges.
+
+A future mobile/external API may use Laravel Sanctum if a real API consumer is introduced.
+
+## 21. FYP Scope
+
+### Required FYP Vertical
+
+1. Landlord authenticates.
+2. Creates property and unit.
+3. Links/invites tenant.
+4. Creates tenancy.
+5. Creates/sends agreement.
+6. Tenant reviews and accepts.
+7. Rent invoice is generated.
+8. Tenant sees amount due.
+9. Tenant initiates payment.
+10. Payment provider/sandbox returns authoritative result.
+11. Laravel backend reconciles payment idempotently.
+12. Partial/full payment state is reflected correctly.
+13. Receipt is generated.
+14. SMS/in-app confirmation is recorded/sent.
+15. Tenant submits maintenance issue.
+16. Landlord/property manager updates it.
+17. Both parties see history.
+18. Dashboard reflects collections and outstanding rent.
+19. Inspection/deposit close-out is demonstrated if included in final implementation.
+
+### Explicitly Out of Initial Scope
+
+- property marketplace/search as the primary product;
+- mortgage/lending;
+- tax filing;
+- payroll;
+- customer-fund custody/escrow;
+- automatic tenant blacklists;
+- automated tenant credit scores;
+- claims of legally certified e-signature without validated implementation;
+- multi-country expansion;
+- production integrations with every Tanzanian payment provider at once;
+- microservices without a demonstrated requirement;
+- a separate frontend/backend framework split without a real need.
+
+## 22. Security and Privacy
+
+Mandatory principles:
+
+- Laravel server-side authorization;
+- least privilege;
+- CSRF/session protection;
+- safe Form Request validation;
+- controlled Eloquent mass assignment;
+- private storage for tenancy documents;
+- webhook validation and idempotency;
+- input and upload validation;
+- secrets only in environment variables/secret stores;
+- no public tenant payment history;
+- no real customer/research data in Git;
+- consent for any portable rental-history sharing;
+- database transactions for sensitive multi-record financial changes.
+
+See `docs/SECURITY.md`.
+
+## 23. Research and Evaluation
+
+This is an evaluated Final Year Project, not only an implementation exercise.
+
+Academic baseline: `docs/FYP_PROPOSAL.md`.
+
+Evaluation methodology: `docs/RESEARCH_AND_EVALUATION.md`.
+
+Testing strategy: `docs/TESTING.md`.
+
+Potential metrics include payment reconciliation correctness, task completion time, maintenance resolution time, SMS delivery results, authorization test results, usability outcomes and application response times.
+
+## 24. Success Criteria
+
+The FYP is successful when it demonstrates a coherent, secure and measurable rental lifecycle with no fake provider/legal claims and no critical dead ends in the primary flow.
+
+A strong final demonstration should show:
+
+**Landlord dashboard → property/unit → tenancy/agreement → rent invoice → partial/full mobile-money payment → verified receipt → SMS → maintenance → audit timeline → reports/close-out.**
+
+## 25. Current Repository State
+
+The previous Next.js application implementation has been intentionally removed from `masterchanges`.
+
+The repository currently contains the FYP/product documentation baseline. The next engineering step is a clean Laravel bootstrap according to `docs/ROADMAP.md` and `docs/DEVELOPMENT.md`.
+
+Do not assume any product capability is currently implemented merely because it is documented here.
+
+## 26. Future Product Direction
+
+After the FYP core is stable, possible extensions include:
+
+- production mobile-money integrations;
+- USSD tenant self-service;
+- WhatsApp notifications;
+- property-manager SaaS plans;
+- utility/service-charge billing;
+- vendor management for maintenance;
+- PDF agreements with verification IDs;
+- advanced portfolio analytics;
+- carefully designed, consent-controlled rental history portability;
+- public API using Laravel API routes/Sanctum when justified;
+- native/mobile application only if the responsive web approach proves insufficient.
+
+Future features should extend the core rental-management proposition rather than distract from it.

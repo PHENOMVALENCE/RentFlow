@@ -1,127 +1,325 @@
-# Roadmap — RentFlow
+# Roadmap — RentFlow 2027 Final Year Project
 
-Status snapshot (9 September 2026): **Phase 0 complete** on `masterchanges` (PR [#1](https://github.com/PHENOMVALENCE/RentFlow/pull/1), not merged). **Phase 1** is next. See [`PROGRESS.md`](./PROGRESS.md).
+This roadmap prioritizes a complete, testable rental lifecycle before advanced commercial features. `main` remains the base/release branch; implementation proceeds through `masterchanges` with small iterative commits and pull requests.
 
-## PHASE 0 — Repository bootstrap
+## Phase 0 — Historical Prototype
 
-**Status:** Complete on `masterchanges`; waiting for review/merge into `main`.
+**Status:** Superseded.
 
-**Objective:** Establish the Git workflow, Next.js app, documentation, and public shell.
+The original 2026 prototype used Next.js/TypeScript and was merged through PR #1. That application codebase has since been intentionally removed from `masterchanges` so the 2027 FYP can start from a clean Laravel baseline.
 
-**Deliverables:** `main` baseline, `masterchanges`, Next.js + TypeScript + Tailwind + ESLint, docs, `.env.example`, landing shell.
+The historical prototype remains available through Git history only; it is not the canonical implementation direction.
 
-**Dependencies:** GitHub repository.
+## Phase 1 — FYP Documentation and Laravel Architecture Baseline
 
-**Acceptance:** lint, typecheck, and production build pass; PR opened to `main` and not auto-merged.
+**Status:** In progress / documentation baseline established.
 
-## PHASE 1 — UI foundation and authentication
+Deliverables:
 
-**Status:** Not started.
+- FYP proposal;
+- formal SRS;
+- product requirements;
+- Laravel architecture decision;
+- MySQL schema blueprint;
+- payment/SMS integration strategy;
+- testing strategy;
+- deployment strategy;
+- research/evaluation plan;
+- agent/contribution workflow;
+- clean documentation-only repository baseline.
 
-**Objective:** Sign-up / sign-in for landlord and tenant.
+Acceptance:
 
-**Deliverables:** Auth routes, profile row, role-aware redirects, protected layouts.
+- Laravel is the canonical implementation stack;
+- MySQL is the default database;
+- no active documentation instructs agents to build the old Next.js/Supabase architecture;
+- P0 product requirements can be traced to modules and planned tests.
 
-**Dependencies:** Supabase project.
+## Phase 2 — Clean Laravel Bootstrap
 
-**Acceptance:** Both roles can register, log in, and reach an empty dashboard.
+Objective: establish the new application foundation without implementing broad product features prematurely.
 
-## PHASE 2 — Property + unit management
+Deliverables:
 
-**Objective:** Landlord can model buildings and units with TZS rent.
+- initialize Laravel in repository root while preserving existing docs;
+- PHP/Composer configuration;
+- Blade + Livewire + Tailwind foundation;
+- MySQL configuration and `.env.example`;
+- base authentication starter stack;
+- base test runner;
+- code formatter/static-analysis tooling selected and documented;
+- GitHub CI baseline;
+- health/home page and basic responsive layout.
 
-**Deliverables:** CRUD for properties and units; occupancy flags.
+Acceptance:
 
-**Dependencies:** Phase 1.
+- clean clone can be installed using documented commands;
+- application connects to a local test/development MySQL database;
+- `php artisan test` passes;
+- production frontend assets build;
+- no secrets are committed.
 
-**Acceptance:** Landlord creates a property and a unit with monthly rent.
+## Phase 3 — Authentication and Role Isolation
 
-## PHASE 3 — Tenant onboarding + tenancy management
+Objective: establish secure identity and server-side authorization.
 
-**Objective:** Invite tenant and bind a tenancy to a unit.
+Deliverables:
 
-**Deliverables:** Invitation, tenancy record, tenant view of assigned unit.
+- landlord and tenant registration/sign-in;
+- user/profile/role model;
+- protected dashboards;
+- Laravel Policies/Gates/middleware;
+- secure password/session handling;
+- negative authorization tests;
+- initial administrator role boundary;
+- property-manager role architecture without overbuilding it.
 
-**Dependencies:** Phase 2.
+Acceptance:
 
-**Acceptance:** Tenant accepts invite and sees the unit.
+- authenticated roles reach correct dashboards;
+- Tenant A cannot access Tenant B data;
+- Landlord A cannot access Landlord B data;
+- changing IDs/URLs cannot bypass Laravel authorization policies.
 
-## PHASE 4 — Digital agreements
+## Phase 4 — Property, Unit and Tenancy Lifecycle
 
-**Objective:** Structured agreement draft, send, view, accept.
+Objective: model the core rental relationship.
 
-**Deliverables:** Agreement statuses, acceptance audit row.
+Deliverables:
 
-**Dependencies:** Phase 3.
+- property CRUD;
+- unit CRUD;
+- occupancy/vacancy logic;
+- tenant invite/link flow;
+- tenancy creation and activation;
+- rent amount and billing rules;
+- lease start/end dates;
+- deposit metadata;
+- tenancy status/history;
+- lease-expiry indicators.
 
-**Acceptance:** Tenant acceptance is stored with version and timestamp.
+Acceptance:
 
-## PHASE 5 — Rent billing
+- landlord can create property/unit and activate a valid tenancy;
+- conflicting active tenancy rules are enforced;
+- tenant sees only their own linked tenancy;
+- factories/seeders produce synthetic demo data.
 
-**Objective:** Generate invoices independent of payments.
+## Phase 5 — Digital Agreements and Audit Trail
 
-**Deliverables:** Invoice statuses, due dates, balances.
+Objective: create traceable structured rental agreements.
 
-**Dependencies:** Phase 4.
+Deliverables:
 
-**Acceptance:** After acceptance, a rent obligation is visible to both parties.
+- agreement generation from tenancy data;
+- versioning;
+- send/view/accept lifecycle;
+- acceptance timestamps and audit metadata;
+- tenancy timeline events;
+- private agreement document access.
 
-## PHASE 6 — Payments
+Optional robustness:
 
-**Objective:** Record rent payment through the provider abstraction.
+- OTP acceptance;
+- PDF generation;
+- verification/reference ID.
 
-**Deliverables:** Sandbox adapter, payment statuses, landlord live view, receipts.
+Acceptance:
 
-**Dependencies:** Phase 5.
+- accepted agreement is traceable to exact version, user and timestamp;
+- unauthorized users cannot retrieve the agreement;
+- product does not claim legal certification beyond the implemented mechanism.
 
-**Acceptance:** Simulated payment marks invoice paid and issues a receipt.
+## Phase 6 — Rent Engine and Invoicing
 
-## PHASE 7 — SMS reminders
+Objective: implement reliable rent obligations independently from payments.
 
-**Objective:** Notify parties of invitations, due rent, and payments.
+Deliverables:
 
-**Deliverables:** SMS adapter (Africa's Talking or sandbox logger).
+- recurring tenancy billing schedule;
+- Laravel Scheduler command/job orchestration;
+- invoice generation service/action;
+- due dates and billing periods;
+- DRAFT, UPCOMING, DUE, PARTIALLY_PAID, PAID, OVERDUE, WAIVED and CANCELLED logic where applicable;
+- balance calculations;
+- landlord and tenant invoice views;
+- duplicate invoice prevention.
 
-**Dependencies:** Phase 6.
+Acceptance:
 
-**Acceptance:** A payment or reminder event produces a sent or logged SMS.
+- invoices are generated correctly from tenancy rules;
+- repeated scheduler execution does not create duplicates;
+- calculations/status rules are covered by automated tests.
 
-## PHASE 8 — Maintenance
+## Phase 7 — Payments, Partial Allocation and Receipts
 
-**Objective:** Tenant reports issues; landlord updates status.
+Objective: build a robust mobile-money-ready financial workflow.
 
-**Deliverables:** Categories, priorities, status history, optional attachments.
+Deliverables:
 
-**Dependencies:** Phase 3.
+- Laravel payment-provider contract/service;
+- sandbox adapter first;
+- internal payment records;
+- payment initiation;
+- provider reference mapping;
+- webhook/callback controller;
+- signature/authenticity checks where supported;
+- idempotent processing;
+- amount/currency/reference validation;
+- database-transaction reconciliation;
+- partial-payment allocations;
+- digital receipts;
+- manual-payment distinction if supported.
 
-**Acceptance:** Tenant sees landlord status changes.
+Acceptance:
 
-## PHASE 9 — Rental Passport + timeline
+- full payment settles an invoice exactly once;
+- partial payment creates the correct remaining balance;
+- duplicate webhook cannot duplicate allocation/receipt;
+- failed/cancelled payment cannot settle invoice;
+- rollback leaves records consistent when reconciliation fails midway.
 
-**Objective:** Tenancy timeline and consent-controlled passport summary.
+## Phase 8 — SMS and Notification Automation
 
-**Deliverables:** Event log UI; passport stats; no public exposure.
+Objective: reduce manual landlord/tenant communication.
 
-**Dependencies:** Phases 4–8.
+Deliverables:
 
-**Acceptance:** Demo can show timeline and passport without calling it a credit score.
+- Laravel notification/SMS service boundary;
+- Africa's Talking sandbox or equivalent;
+- queued SMS delivery;
+- rent due reminders;
+- overdue reminders;
+- payment confirmations;
+- agreement notifications;
+- lease-expiry notifications;
+- maintenance updates;
+- delivery logging/retry strategy.
 
-## PHASE 10 — Analytics + polish
+Acceptance:
 
-**Objective:** Collection summaries and UX hardening.
+- SMS provider failure does not corrupt originating transaction;
+- queued delivery can retry safely;
+- representative SMS workflows are covered by tests/fakes.
 
-**Deliverables:** Simple landlord totals; accessibility and low-bandwidth passes.
+## Phase 9 — Maintenance Management
 
-**Dependencies:** Phase 6.
+Objective: create a transparent maintenance workflow.
 
-**Acceptance:** Landlord can see paid vs overdue in TZS.
+Deliverables:
 
-## PHASE 11 — Hackathon demo hardening
+- tenant issue reporting;
+- categories and priority;
+- validated/private attachments;
+- landlord/property-manager handling;
+- REPORTED → ACKNOWLEDGED → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED flow;
+- REOPENED where required;
+- chronological status history;
+- notifications.
 
-**Objective:** Reliable 15-step demo.
+Acceptance:
 
-**Deliverables:** Seed demo accounts (non-secret), script, failure fallbacks.
+- tenant and authorized manager/landlord see the same ticket state/history;
+- unauthorized users cannot view/modify unrelated tickets.
 
-**Dependencies:** Phases 1–9 as available.
+## Phase 10 — Landlord Analytics and Portfolio Reporting
 
-**Acceptance:** Full vertical can be demonstrated without crashes.
+Objective: turn transactional records into reliable management information.
+
+Deliverables:
+
+- expected rent;
+- collected rent;
+- outstanding/overdue rent;
+- collection rate;
+- occupancy/vacancy;
+- upcoming lease expiries;
+- maintenance workload/resolution indicators;
+- property-level summaries;
+- efficient Eloquent queries with pagination/eager loading where needed.
+
+Acceptance:
+
+- dashboard values derive from authoritative invoices/payments/allocations;
+- no duplicated manually maintained financial totals;
+- representative dataset performance is measured.
+
+## Phase 11 — Inspections and Security-Deposit Accounting
+
+Objective: improve move-in/move-out traceability.
+
+Deliverables:
+
+- move-in inspection;
+- move-out inspection;
+- checklist/condition/notes/images;
+- optional meter readings;
+- comparison view;
+- deposit accounting ledger;
+- deduction evidence and refundable balance.
+
+Acceptance:
+
+- closing record is auditable;
+- calculations are tested;
+- platform does not claim to custody deposit funds.
+
+## Phase 12 — Property Manager, Localization and Accessibility
+
+Objective: improve market readiness and inclusion.
+
+Deliverables:
+
+- delegated property-manager permissions;
+- English/Kiswahili Laravel localization resources;
+- SMS language preference;
+- accessibility review;
+- mobile/low-bandwidth optimization.
+
+Acceptance:
+
+- delegated manager cannot access unrelated properties;
+- primary tenant/landlord journeys work at common mobile widths;
+- critical flows remain understandable in both supported languages where translated.
+
+## Phase 13 — FYP Evaluation and Hardening
+
+Objective: validate the system academically and technically.
+
+Deliverables:
+
+- complete automated quality gate;
+- end-to-end FYP demo path;
+- authorization/security test evidence;
+- performance measurements;
+- usability study;
+- problem/solution evaluation;
+- dissertation diagrams/tables/evidence;
+- production-like Laravel deployment;
+- queue/scheduler verification;
+- backup/recovery documentation;
+- known limitations register.
+
+Acceptance:
+
+- FYP requirements are traceable to implementation/tests;
+- critical demo flow works without dead ends;
+- evaluation results use measured/collected evidence rather than invented claims;
+- application can be reproduced from repository documentation.
+
+## Post-FYP Product Expansion
+
+Potential future work:
+
+- production mobile-money rails at scale;
+- USSD balance/payment/maintenance workflows;
+- WhatsApp notifications;
+- maintenance vendor management;
+- service-charge/utility billing;
+- portfolio forecasting and operational anomaly detection;
+- tenant-controlled portable rental history;
+- commercial subscription/billing model;
+- public API with Laravel Sanctum where a real consumer exists;
+- native mobile application only if responsive Laravel web/PWA constraints justify it.
+
+Commercial expansion must preserve tenant privacy and avoid opaque automated housing-access decisions.

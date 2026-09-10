@@ -2,141 +2,278 @@
 
 ## Background
 
-RentFlow is a Tanzanian rental-relationship platform for the RIDC PT Innovation Hackathon 2026. Landlords and tenants currently coordinate agreements, rent, receipts, and maintenance across paper, chat, and mobile-money messages.
+RentFlow is a 2027 Final Year Project and market-oriented Tanzanian rental-management platform. It is designed to replace fragmented rental administration across paper agreements, WhatsApp chats, notebooks, spreadsheets, mobile-money confirmations, screenshots and manual maintenance follow-up.
 
-## Problem
+## Product Goal
 
-There is no shared system of record for tenancy terms, rent due, payments made, receipts, or maintenance. Trust is expensive to establish and easy to lose.
+Create one auditable rental lifecycle for landlords, tenants and property managers:
 
-## Goals
+**Property → Unit → Tenancy → Agreement → Rent Invoice → Payment → Receipt → Maintenance → Inspection → Renewal / Exit**
 
-- Deliver one end-to-end digital tenancy workflow for the hackathon demo.
-- Model rent obligations independently from payments.
-- Support TZS, Tanzanian phone numbers, and mobile-money providers through abstractions.
-- Keep the product honest: no fake legal e-signature claims, no credit-score branding, no tenant blacklists.
+## Primary Problems
 
-## Non-goals
+- landlords lack clear visibility into expected, paid, partially paid and overdue rent;
+- payment evidence is often scattered across SMS messages and screenshots;
+- tenants may struggle to retrieve receipts and agreement records;
+- rent reminders and lease-expiry tracking are manual;
+- maintenance complaints lack structured status history;
+- deposit and move-out disagreements may lack documented inspection evidence;
+- multi-property landlords need portfolio-level reporting;
+- rental systems that assume constant broadband/smartphone access can exclude users.
 
-- Replacing licensed banking or credit bureaus
-- Building a property marketplace
-- Shipping a property-manager product in MVP
-- Connecting every mobile-money operator in Phase 0
-- Native iOS/Android apps in MVP
+## Product Principles
+
+- one shared source of truth for authorized participants;
+- invoices and payments are separate concepts;
+- financial state is derived from authoritative records;
+- mobile-money-first, provider-agnostic payment design;
+- SMS as an operational channel;
+- mobile-first and low-bandwidth-aware UX;
+- English/Kiswahili localization architecture;
+- tenant privacy and least privilege;
+- no automatic blacklisting or tenant credit-score claims;
+- no legally certified e-signature claims unless the implemented mechanism supports them;
+- no representation that RentFlow holds security-deposit money unless a compliant custody model exists.
 
 ## Personas
 
-See `PROJECT.md`. Primary: landlord with multiple units; tenant paying monthly by mobile money.
+### Landlord
+Needs property/unit visibility, tenant records, agreements, rent collection, arrears, receipts, maintenance, lease expiry and reporting.
 
-## Functional requirements
+### Tenant
+Needs clear rent obligations, payment options, proof of payment, agreements, maintenance tracking and tenancy history.
 
-### Authentication & identity — P0 (hackathon)
+### Property Manager
+Needs delegated access to assigned properties, tenant operations, maintenance and reporting without unrestricted landlord-account access.
 
-- Landlord and tenant can register and sign in.
-- Roles are distinct; a user may later hold more than one role, but MVP may use a single active role.
-- Session secrets never leak to the client beyond intended public config.
+### Administrator
+Needs auditable support/operations capabilities and integration-failure visibility.
 
-### Properties & units — P0
+## Priority Definitions
 
-- Landlord can create a property and one or more units.
-- Units have rent amount in TZS and occupancy state.
+- **P0 — FYP Core:** required for the primary end-to-end demonstration and evaluation.
+- **P1 — FYP Robustness:** important for a strong production-style FYP if time permits after P0 is stable.
+- **P2 — Product Expansion:** commercial/future extensions after the core is validated.
 
-### Tenancy & invitations — P0
+## Functional Requirements by Priority
 
-- Landlord can invite a tenant (phone and/or email).
-- Tenancy binds landlord, tenant, property, and unit.
+### Authentication and Authorization — P0
 
-### Digital agreements — P0
+- secure registration/sign-in;
+- landlord and tenant roles;
+- server-side authorization using Laravel Policies/Gates/middleware;
+- protected dashboards;
+- tenant/landlord data isolation.
 
-- Agreement is generated from structured tenancy data.
-- Statuses: DRAFT, SENT, VIEWED, ACCEPTED, ACTIVE, EXPIRED, TERMINATED, RENEWED.
-- Acceptance stores version, user, timestamp, and audit metadata.
-- PDF generation is P1; legal e-signature certification is P2 / production legal work.
+Property-manager role is P1 if not included in the first authentication implementation.
 
-### Billing — P0
+### Properties and Units — P0
 
-- System generates rent invoices/obligations with ID, tenancy, amount, period, due date, status, amount paid, balance.
-- Invoice is not 1:1 with a single payment.
+- create/edit/archive properties;
+- create/edit units;
+- TZS rent configuration;
+- occupancy/vacancy state;
+- unit details and tenancy linkage.
 
-### Payments — P0 (sandbox), P1 (live rails)
+### Tenant and Tenancy Management — P0
 
-- Tenant can initiate or simulate payment.
-- Landlord sees successful payment without refresh gymnastics in the demo.
-- Provider adapter supports sandbox now; M-Pesa, Mixx by Yas, Airtel Money, HaloPesa, bank, and manual later.
+- invite/link tenant;
+- create tenancy;
+- start/end dates;
+- billing rules;
+- deposit metadata;
+- tenancy status and history;
+- lease-expiry visibility.
+
+### Digital Agreements — P0
+
+- agreement generated from structured tenancy data;
+- versioning;
+- review/send/accept workflow;
+- acceptance audit metadata.
+
+PDF rendering and OTP acceptance can be P1 if the structured workflow is already correct.
+
+### Rent Billing — P0
+
+- generate invoices/obligations independently of payments;
+- calculate amount due and balance;
+- support DRAFT, UPCOMING, DUE, PARTIALLY_PAID, PAID, OVERDUE, WAIVED and CANCELLED where applicable;
+- support recurring monthly rental schedules through Laravel Scheduler/domain services;
+- retain invoice history;
+- prevent duplicate invoices for the same tenancy/billing period.
+
+### Payments — P0 sandbox / P1 production-capable rail
+
+- initiate payment against an invoice;
+- provider-agnostic Laravel service/adapter;
+- record provider/internal references;
+- process success/failure/cancelled states;
+- idempotent webhook processing;
+- server-side verification;
+- partial-payment allocation;
+- database transactions around atomic reconciliation;
+- distinguish manual vs provider-verified payments.
 
 ### Receipts — P0
 
-- Successful payment produces a digital receipt the tenant can view.
+- create auditable digital receipt after valid payment allocation;
+- show amount, date, tenant/unit, invoice allocation and payment reference;
+- historical receipt retrieval.
 
-### Notifications — P0 (sandbox or logged), P1 (Africa's Talking)
+### Notifications and SMS — P0 sandbox/logging / P1 production-capable
 
-- Events: invitation, agreement, rent reminder, payment, receipt, maintenance, expiry.
+Events:
+
+- tenant invitation;
+- agreement ready/accepted;
+- rent reminder;
+- overdue rent;
+- payment success/failure;
+- receipt ready;
+- maintenance update;
+- lease expiry.
+
+Provider target: Africa's Talking through a Laravel service/notification adapter. Slow delivery work should use Laravel queues where appropriate.
 
 ### Maintenance — P0
 
-- Tenant submits category, title, description, urgency.
-- Landlord updates status; tenant sees progress; history is kept.
+- tenant creates issue;
+- category, description, priority and attachments;
+- landlord/property manager updates status;
+- chronological status history;
+- tenant sees progress.
 
-### Timeline & Rental Passport — P0 (summary), P1 (full)
+### Audit Timeline — P0
 
-- Major events appear on a tenancy timeline.
-- Passport is consent-controlled and is not a credit score.
+- major tenancy events appear chronologically;
+- agreement, invoice, payment, receipt and maintenance events are traceable;
+- sensitive payloads/secrets are excluded from user-facing history.
 
-### Analytics — P2
+### Analytics — P1
 
-- Collection summaries and charts after the demo path is solid.
+- expected rent;
+- collected rent;
+- outstanding/overdue rent;
+- collection rate;
+- occupancy/vacancy;
+- upcoming lease expiries;
+- maintenance workload and resolution metrics;
+- property-by-property summary.
 
-## Non-functional requirements
+### Move-In/Move-Out Inspections — P1
 
-| Area | Requirement | Priority |
-| --- | --- | --- |
-| Locale | TZS, `en-TZ` dates, Tanzanian phones | P0 |
-| Performance | Usable on low-cost Android and slow networks | P0 |
-| Accessibility | Labels, keyboard, not color-only status | P0 |
-| Security | Server authz, no public PII, env secrets | P0 |
-| RLS | Required before production data | P0 for production, P1 for demo if sandbox-only |
-| Availability | Vercel hosting | P1 |
-| Swahili | Architecture now, UI later | P1/P2 |
-| Observability | Structured logs, no secrets in logs | P1 |
+- checklist and condition records;
+- notes and photographic evidence;
+- move-in vs move-out comparison;
+- meter readings where relevant.
 
-## Workflows
+### Security-Deposit Accounting — P1
 
-Documented in `PROJECT.md` section 14 and `docs/HACKATHON.md`.
+- deposit required/received record;
+- documented deductions;
+- refundable balance;
+- settlement status;
+- no custody/escrow claim in the initial implementation.
 
-## Acceptance criteria (MVP)
+### Property Manager — P1
 
-- A reviewer can complete the 20-step vertical without unimplemented dead ends on the demo path.
-- Amounts display as TZS with thousands separators.
-- Placeholder integrations are labeled as planned or sandbox.
-- Lint, typecheck, and production build succeed.
+- landlord assigns manager to selected properties;
+- delegated permissions;
+- no access to unrelated landlord resources;
+- actions remain auditable.
 
-## MVP requirements
+### Localization — P1
 
-P0 items in the functional list that sit on the demo path.
+- English and Kiswahili Laravel translation resources;
+- locale-appropriate currency/date/number formatting;
+- SMS copy respects preferred language when configured.
 
-## Post-MVP requirements
+### USSD — P2
 
-Live payment rails, production SMS, PDF agreements, Swahili, property-manager role, advisory maintenance intelligence, formal legal review of agreements.
+Potential low-bandwidth self-service:
 
-## Accessibility
+- check rent balance;
+- initiate payment flow;
+- view due date;
+- submit simple maintenance request/status inquiry.
 
-Visible labels, focus states, semantic errors, status text plus color, WCAG-minded contrast.
+USSD should call the same Laravel domain services as the web application rather than duplicate financial logic.
 
-## Responsiveness
+### Rental History / Portable Passport — P2
 
-Mobile-first tenant flows; desktop-capable landlord dashboards. Tables collapse to cards on small screens.
+A future tenant-controlled history may summarize verified tenancies and payments. It must be consent-controlled and must not be branded or used as an automatic credit score/blacklist.
 
-## Performance
+## Non-Goals for Initial FYP
 
-Server rendering where appropriate, paginated lists, compressed assets, minimal client JS.
+- property marketplace/search as the central product;
+- mortgage or consumer lending;
+- automated tenant credit decisions;
+- automatic blacklisting;
+- payroll or tax filing;
+- customer-fund escrow/custody;
+- integration with every payment operator at once;
+- multi-country support;
+- native iOS/Android apps before the responsive Laravel web experience is validated;
+- microservice decomposition without a demonstrated need;
+- a separate JavaScript SPA/API architecture for the initial FYP.
 
-## Low-bandwidth support
+## Non-Functional Requirements
 
-Avoid heavy hero media, avoid chatty client polling, prefer SMS for critical reminders.
+Detailed requirements and identifiers are in `docs/SRS.md`.
 
-## Observability
+Key expectations:
 
-Log payment and webhook handling with correlation IDs. Never log full PAN-like secrets, API keys, or raw ID documents.
+- secure Laravel session authentication;
+- server-side authorization with Policies/Gates/middleware;
+- CSRF protection for browser forms;
+- validated Form Requests and safe model assignment;
+- idempotent financial integrations;
+- MySQL transaction integrity for atomic financial workflows;
+- structured logs without secrets;
+- responsive mobile-first Blade/Livewire UI;
+- accessibility-minded controls and status communication;
+- efficient low-bandwidth behaviour;
+- maintainable PHP/domain separation;
+- testable business logic;
+- Laravel migrations for schema changes;
+- queues/jobs for slow/retryable provider work;
+- scheduler-based recurring billing/reminder tasks;
+- documented environment configuration.
 
-## Success metrics
+## Primary FYP Acceptance Flow
 
-See `PROJECT.md` section 23.
+A reviewer should be able to complete the following without dead ends:
+
+1. landlord authenticates;
+2. creates property and unit;
+3. links/invites tenant;
+4. creates tenancy and agreement;
+5. tenant reviews/accepts;
+6. rent invoice is generated;
+7. tenant initiates payment;
+8. payment result is reconciled server-side;
+9. partial/full payment status is correct;
+10. digital receipt is available;
+11. notification/SMS event is sent or reliably logged;
+12. tenant raises maintenance issue;
+13. landlord updates it;
+14. both parties see the history;
+15. landlord dashboard reflects authoritative collections/balances.
+
+## Success Metrics
+
+The product and dissertation may evaluate:
+
+- payment reconciliation correctness;
+- invoice/balance calculation correctness;
+- task completion time;
+- receipt retrieval time;
+- maintenance traceability and resolution time;
+- SMS delivery results;
+- authorization test results;
+- mobile usability;
+- application response time;
+- user satisfaction/usability results.
+
+See `docs/RESEARCH_AND_EVALUATION.md` and `docs/TESTING.md`.
