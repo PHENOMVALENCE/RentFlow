@@ -47,6 +47,8 @@ Use a mixed evaluation approach combining system tests, task-based usability eva
 
 Demonstrate that critical requirements in `docs/SRS.md` work correctly. Each critical requirement should map to at least one test or documented validation scenario.
 
+Laravel feature/unit tests should provide reproducible evidence for tenancy rules, authorization, billing, payment reconciliation, notifications and maintenance workflows.
+
 ### Usability Evaluation
 
 Give participants realistic tasks such as:
@@ -71,13 +73,15 @@ Record:
 
 Measure:
 
-- response time for common application operations;
+- response time for common Laravel application operations;
 - correctness of invoice generation;
 - correctness of payment allocation;
 - webhook idempotency under repeated callbacks;
-- authorization boundary enforcement;
+- authorization boundary enforcement through Laravel Policies/Gates;
+- queue/job behaviour for SMS and retryable external work;
+- scheduler correctness for recurring invoices/reminders;
 - SMS integration success/failure handling;
-- build/test reliability;
+- test/build reliability;
 - behaviour under constrained network conditions.
 
 ## Proposed Before-vs-After Metrics
@@ -134,7 +138,9 @@ The dissertation should acknowledge limitations such as:
 
 ## Expected Academic Contribution
 
-The project should demonstrate how locally appropriate fintech and communication integrations can be combined with tenancy lifecycle management to address fragmented rental administration. The academic contribution is the design, implementation and evaluated effectiveness of the integrated workflow—not merely the use of Next.js, PostgreSQL or an external API.
+The project should demonstrate how locally appropriate fintech and communication integrations can be combined with tenancy lifecycle management to address fragmented rental administration.
+
+The academic contribution is the **design, implementation and evaluated effectiveness of the integrated rental workflow**, not merely the use of Laravel, MySQL, Africa's Talking or any external API.
 
 ## Final Report Evidence Checklist
 
@@ -143,8 +149,11 @@ Preserve:
 - problem-validation instruments;
 - anonymized findings;
 - system requirements and traceability;
-- architecture and database design;
+- Laravel architecture and database design;
 - test cases and results;
+- payment/webhook idempotency evidence;
+- authorization test evidence;
+- scheduler/queue test evidence where applicable;
 - usability evaluation results;
 - measured performance data;
 - screenshots/diagrams;
