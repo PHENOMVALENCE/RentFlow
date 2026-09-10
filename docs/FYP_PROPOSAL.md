@@ -97,19 +97,27 @@ Important differentiators include:
 
 ## Proposed Technology Stack
 
-- Frontend/Web: Next.js, React, TypeScript
-- Styling: Tailwind CSS and component system such as shadcn/ui
-- Database: PostgreSQL
-- Backend/Data platform: Supabase or equivalent PostgreSQL-backed service
-- Validation: Zod
-- Authentication: Supabase Auth or equivalent
-- File storage: Supabase Storage or another S3-compatible service
-- SMS: Africa's Talking through a notification adapter
-- Payments: provider-agnostic adapter with sandbox first and a production-capable provider later
-- Deployment: Vercel for the web application
-- Source control: GitHub
-- Testing: unit, integration and end-to-end tests
-- CI/CD: GitHub Actions
+- **Application framework:** Laravel
+- **Programming language:** PHP
+- **Frontend:** Blade + Livewire
+- **Styling:** Tailwind CSS
+- **Database:** MySQL 8+
+- **ORM:** Eloquent
+- **Authentication:** Laravel authentication/session stack
+- **Authorization:** Laravel Policies, Gates and middleware
+- **Validation:** Laravel Form Requests and validation rules
+- **Background processing:** Laravel Queues and Jobs
+- **Scheduled automation:** Laravel Scheduler
+- **Notifications:** Laravel Notifications with SMS-provider adapter
+- **File storage:** Laravel Filesystem using private local or S3-compatible storage depending on deployment
+- **SMS:** Africa's Talking through a provider/service adapter
+- **Payments:** provider-agnostic Laravel payment service with sandbox first and production-capable provider later
+- **Testing:** Laravel testing stack using PHPUnit or Pest
+- **Deployment:** Laravel-compatible hosting, VPS or container environment with MySQL, queue worker, cron/scheduler and HTTPS
+- **Source control:** GitHub
+- **CI/CD:** GitHub Actions or equivalent repository-integrated CI
+
+A separate Next.js/React frontend or Supabase backend is not required for the initial FYP. The Laravel monolith is intentionally selected to reduce unnecessary architectural complexity while still supporting robust financial, notification and tenancy workflows.
 
 ## Methodology
 
@@ -119,12 +127,13 @@ The project will follow an iterative software-development approach.
 2. System analysis and domain modelling.
 3. UI/UX prototyping.
 4. Database and architecture design.
-5. Iterative implementation by module.
-6. Integration of external services.
-7. Functional, security, usability and performance testing.
-8. User evaluation with representative rental-management scenarios.
-9. Analysis of results against the project objectives.
-10. Final documentation, deployment and demonstration.
+5. Clean Laravel application bootstrap.
+6. Iterative implementation by module.
+7. Integration of external services.
+8. Functional, security, usability and performance testing.
+9. User evaluation with representative rental-management scenarios.
+10. Analysis of results against the project objectives.
+11. Final documentation, deployment and demonstration.
 
 ## Evaluation Metrics
 
@@ -145,9 +154,11 @@ Potential evaluation metrics include:
 
 The FYP should prioritize residential rental operations. Property marketplace discovery, mortgage lending, automated tenant credit scoring, automatic blacklisting, tax filing, escrow/custody of customer money, and legally certified e-signature services are outside the initial scope unless separately validated and approved.
 
+The project should also avoid unnecessary microservice or multi-framework architecture unless a measured technical requirement emerges.
+
 ## Expected Outcome
 
-A production-style prototype demonstrating the complete lifecycle:
+A production-style Laravel prototype demonstrating the complete lifecycle:
 
 **property → unit → tenant → tenancy → agreement → rent invoice → mobile-money payment → verified reconciliation → receipt → SMS notification → maintenance → inspection → renewal or exit**.
 
